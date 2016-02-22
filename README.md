@@ -1,0 +1,1 @@
+# jgade-code-googletest-version
