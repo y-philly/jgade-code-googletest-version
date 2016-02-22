@@ -1,4 +1,4 @@
-COMPONENT_NAME := CircularBuffer
+UNIT_NAME := CircularBuffer
 
 PRODUCT_CODE_DIR := ../../../source
 UTEST_FRAMEWORK_HOME := ../../../framework

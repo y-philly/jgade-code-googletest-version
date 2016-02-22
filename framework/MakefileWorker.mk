@@ -6,7 +6,7 @@
 #
 # プロジェクトのMakefileでは以下の変数を設定してください.
 #
-# COMPONENT_NAME       : テスト実行ファイルの名前
+# UNIT_NAME       : テスト実行ファイルの名前
 # PRODUCT_CODE_DIR     : プロダクトコードのルートディレクトリ
 # UTEST_FRAMEWORK_HOME : ユニットテストフレームワークのルートディレクトリ
 # SOURCES              : テスト対象のプロダクトコード
@@ -29,8 +29,8 @@ LCOV_TRACEFILE := lcov.info
 
 GENHTML := $(UTEST_FRAMEWORK_HOME)/tools/lcov-1.11/bin/genhtml
 
-ifndef COMPONENT_NAME
-  $(error Please set COMPONENT_NAME)
+ifndef UNIT_NAME
+  $(error Please set UNIT_NAME)
 endif
 
 # Debug off by default
@@ -112,7 +112,7 @@ src_to_gcno = $(call src_to,.gcno,$1)
 get_lib_from_dir = $(wildcard $1/*.a)
 debug_print_list = $(foreach word,$1,echo "  $(word)";) echo;
 
-test_target := $(COMPONENT_NAME)_tests
+test_target := $(UNIT_NAME)Test
 
 gmock_ver := 1.7.0
 gmock_dir := $(UTEST_FRAMEWORK_HOME)/gmock/gmock-$(gmock_ver)
