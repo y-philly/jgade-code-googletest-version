@@ -109,9 +109,9 @@ gtest_obj := $(call src_to_o,$(gtest_src))
 
 include += -I$(gmock_dir) -I$(gtest_dir) \
            -I$(gmock_dir)/include -I$(gtest_dir)/include \
-           $(foreach dir, $(call get_dirs_from_dirspec, $(INCLUDE_DIR)), -I$(dir))
+           $(foreach dir, $(call get_dirs_from_dirspec, $(include_dir)), -I$(dir))
 
-obj = $(call src_to_o,$(src))
+obj = $(call src_to_o,$(SRC))
 
 test_code = $(call get_src_from_dir_list, $(TEST_CODE_DIR))
 test_obj  = $(call src_to_o,$(test_code))

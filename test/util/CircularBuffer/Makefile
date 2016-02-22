@@ -2,7 +2,8 @@ UNIT_NAME := CircularBuffer
 PRJ_ROOT  := ../../..
 
 # PRODUCT_CODE_DIRからの相対パスでテストするソースコードを列挙する
-SRC := util/CircularBuffer.c
+SRC := util/CircularBuffer.c \
+       util/Utils.c
 
 TEST_CODE_DIR := .
 

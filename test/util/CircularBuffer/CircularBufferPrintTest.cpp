@@ -17,7 +17,7 @@
 //- ------------------------------------------------------------------
 
 
-
+#if 0
 
 #include "CppUTest/TestHarness.h"
 
@@ -154,4 +154,5 @@ TEST(CircularBufferPrint, PrintAMessageForGetFromEmpty)
 
 #endif
 
+#endif
 
