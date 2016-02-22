@@ -18,7 +18,9 @@ ifndef UNIT_NAME
 endif
 ifdef PRJ_ROOT
   src_dir          := $(PRJ_ROOT)/src
-  include_dir      := $(PRJ_ROOT)/include
+  test_dir         := $(PRJ_ROOT)/test
+  mock_dir         := $(PRJ_ROOT)/mock
+  include_dir      := $(PRJ_ROOT)/include $(PRJ_ROOT)/test $(PRJ_ROOT)/mock
   ut_framework_dir := $(PRJ_ROOT)/framework
 else
   $(error Please set PRJ_ROOT)
@@ -111,15 +113,11 @@ include += -I$(gmock_dir) -I$(gtest_dir) \
            -I$(gmock_dir)/include -I$(gtest_dir)/include \
            $(foreach dir, $(call get_dirs_from_dirspec, $(include_dir)), -I$(dir))
 
-obj = $(call src_to_o,$(SRC))
+obj      = $(call src_to_o,$(SRC))
+test_obj = $(call src_to_o,$(TEST_CODE))
+mock_obj = $(call src_to_o,$(MOCK_CODE))
 
-test_code = $(call get_src_from_dir_list, $(TEST_CODE_DIR))
-test_obj  = $(call src_to_o,$(test_code))
-
-mock_src = $(subst ../,,$(call get_src_from_dir_list, $(MOCK_CODE_DIR)))
-mock_obj = $(call src_to_o,$(mock_src))
-
-all_src = $(src) $(test_code) $(mock_src) $(gmock_src) $(gtest_src)
+all_src = $(SRC) $(TEST_CODE) $(MOCK_CODE) $(gmock_src) $(gtest_src)
 dependents = $(call src_to_d,$(all_src))
 
 #
@@ -149,7 +147,7 @@ gen_covfile = $(lcov) --capture --directory ./obj --output-file $(lcov_tracefile
 stuff_to_clean = $(obj) $(test_obj) $(mock_obj) $(dependents) $(gmock_obj) $(gtest_obj)
 
 vpath %.c $(src_dir)
-vpath %.cpp $(dir $(MOCK_CODE_DIR))
+vpath %.cpp $(mock_dir)
 vpath %.cc $(PRJ_ROOT)/framework/googletest
 
 .PHONY: all
@@ -192,7 +190,7 @@ clean:
 	rm -rf gcov obj
 	find . -name "*.gcno" | xargs rm -f
 	find . -name "*.gcda" | xargs rm -f
-	find . -name "$(test_target).*" | xargs rm -rf
+	find . -name "*.exe"  | xargs rm -rf
 
 ctags_option = -R --c++-kinds=+pl --fields=+iaS --extra=+q
 
@@ -215,15 +213,15 @@ include_paths.vim:
 debug:
 	@echo
 	@echo "Target Source code files:"
-	@$(call debug_print_list,$(src))
+	@$(call debug_print_list,$(SRC))
 	@echo "Target obj files:"
 	@$(call debug_print_list,$(obj))
 	@echo "Test code files:"
-	@$(call debug_print_list,$(test_code))
+	@$(call debug_print_list,$(TEST_CODE))
 	@echo "Test obj files:"
 	@$(call debug_print_list,$(test_obj))
-	@echo "Mock src files:"
-	@$(call debug_print_list,$(mock_src))
+	@echo "Mock code files:"
+	@$(call debug_print_list,$(MOCK_CODE))
 	@echo "Mock obj files:"
 	@$(call debug_print_list,$(mock_obj))
 	@echo "All Input Dependency files:"

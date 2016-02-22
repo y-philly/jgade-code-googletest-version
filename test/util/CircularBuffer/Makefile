@@ -1,12 +1,20 @@
 UNIT_NAME := CircularBuffer
 PRJ_ROOT  := ../../..
 
-# PRODUCT_CODE_DIRからの相対パスでテストするソースコードを列挙する
+#
+# srcディレクトリからの相対パスでテストするソースコードを列挙する.
+#
 SRC := util/CircularBuffer.c \
        util/Utils.c
 
-TEST_CODE_DIR := .
+#
+# カレントディレクトリからの相対パスでテストコードを列挙する.
+#
+TEST_CODE := CircularBufferTest.cpp
 
-MOCK_CODE_DIR :=
+#
+# mockディレクトリからの相対パスでモックコードを列挙する.
+#
+MOCK_CODE :=
 
 include $(PRJ_ROOT)/framework/MakefileWorker.mk
