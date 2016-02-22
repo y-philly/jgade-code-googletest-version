@@ -1,11 +1,19 @@
 UNIT_NAME := Flash
 PRJ_ROOT  := ../../..
 
-# PRODUCT_CODE_DIRからの相対パスでテストするソースコードを列挙する
+#
+# srcディレクトリからの相対パスでテストするソースコードを列挙する.
+#
 SRC := IO/Flash.c
 
-TEST_CODE_DIR := .
+#
+# カレントディレクトリからの相対パスでテストコードを列挙する.
+#
+TEST_CODE := FlashTest.cpp
 
-MOCK_CODE_DIR :=
+#
+# mockディレクトリからの相対パスでモックコードを列挙する.
+#
+MOCK_CODE := IO/MockIO.cpp IO/MockMicroTime.cpp
 
 include $(PRJ_ROOT)/framework/MakefileWorker.mk
