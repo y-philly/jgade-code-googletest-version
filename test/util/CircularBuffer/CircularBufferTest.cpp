@@ -16,7 +16,7 @@
 //-    www.renaissancesoftware.net james@renaissancesoftware.net
 //- ------------------------------------------------------------------
 
-#include "CppUTest/TestHarness.h"
+#include "gmock/gmock.h"
 
 #include "CircularBuffer.h"
 #include "FormatOutputSpy.h"
