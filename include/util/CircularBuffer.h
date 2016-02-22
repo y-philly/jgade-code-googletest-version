@@ -29,6 +29,10 @@
 #ifndef D_CircularBuffer_H
 #define D_CircularBuffer_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef struct CircularBufferStruct * CircularBuffer;
 
 CircularBuffer CircularBuffer_Create(int capacity);
@@ -40,4 +44,9 @@ int CircularBuffer_Get(CircularBuffer);
 int CircularBuffer_Capacity(CircularBuffer);
 void CircularBuffer_Print(CircularBuffer);
 int CircularBuffer_VerifyIntegrity(CircularBuffer);
+
+#ifdef __cplusplus
+}
+#endif
+
 #endif  /* D_CircularBuffer_H */

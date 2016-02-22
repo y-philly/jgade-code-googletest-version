@@ -21,12 +21,8 @@
 
 #include "CppUTest/TestHarness.h"
 
-extern "C"
-{
-#include "CircularBuffer.h"
-#include "Utils.h"
+#include "util/CircularBuffer.h"
 #include "FormatOutputSpy.h"
-}
 
 //START: TEST_GROUP
 TEST_GROUP(CircularBufferPrint)
