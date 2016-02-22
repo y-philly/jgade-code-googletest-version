@@ -1,9 +1,9 @@
 /***
  * Excerpted from "Test-Driven Development for Embedded C",
  * published by The Pragmatic Bookshelf.
- * Copyrights apply to this code. It may not be used to create training material, 
+ * Copyrights apply to this code. It may not be used to create training material,
  * courses, books, articles, and the like. Contact us if you are in doubt.
- * We make no guarantees that this code is fit for any purpose. 
+ * We make no guarantees that this code is fit for any purpose.
  * Visit http://www.pragmaticprogrammer.com/titles/jgade for more book information.
 ***/
 /*- ------------------------------------------------------------------ -*/
@@ -27,9 +27,17 @@
 #ifndef D_MicroTime_H
 #define D_MicroTime_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdint.h>
 
 uint32_t MicroTime_Get(void);
 void MicroTime_Delay(uint32_t);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif  /* D_MicroTime_H */
