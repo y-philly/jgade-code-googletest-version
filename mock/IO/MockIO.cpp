@@ -1,11 +1,12 @@
 //- ------------------------------------------------------------------
 //-    Copyright (c) Yasuhiro SHIMIZU -- All Rights Reserved
 //- ------------------------------------------------------------------
+
 #include "MockIO.h"
 
 namespace IO {
 
-IO *gMockIoPtr;
+IO *gMockIoPtr = nullptr;
 
 } // namespace IO
 
