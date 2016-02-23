@@ -6,17 +6,17 @@
 
 namespace IO {
 
-IO *gMockIoPtr = nullptr;
+IO *gMockIOPtr = nullptr;
 
 } // namespace IO
 
 
 void IO_Write(IoAddress addr, IoData value)
 {
-    IO::gMockIoPtr->Write(addr, value);
+    IO::gMockIOPtr->Write(addr, value);
 }
 
 IoData IO_Read(IoAddress addr)
 {
-   return IO::gMockIoPtr->Read(addr);
+   return IO::gMockIOPtr->Read(addr);
 }

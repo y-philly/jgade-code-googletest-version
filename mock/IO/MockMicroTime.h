@@ -18,7 +18,7 @@ public:
     virtual void Delay(uint32_t delay) = 0;
 };
 
-class MockIO: public MicroTime {
+class MockMicroTime: public MicroTime {
 public:
     MOCK_METHOD0(Get, uint32_t());
     MOCK_METHOD1(Delay, void(uint32_t delay));

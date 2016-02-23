@@ -22,7 +22,7 @@ public:
     MOCK_METHOD2(Write, void(IoAddress offset, IoData data));
 };
 
-extern IO *gMockIoPtr;
+extern IO *gMockIOPtr;
 
 } // namespace IO
 

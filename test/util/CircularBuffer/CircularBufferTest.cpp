@@ -15,6 +15,9 @@
 //-
 //-    www.renaissancesoftware.net james@renaissancesoftware.net
 //- ------------------------------------------------------------------
+//- ------------------------------------------------------------------
+//-    Yasuhiro SHIMIZU ported this code to GoogleTest.
+//- ------------------------------------------------------------------
 
 #include "gmock/gmock.h"
 
