@@ -1,8 +1,8 @@
 //- ------------------------------------------------------------------
 //-    Copyright (c) Yasuhiro SHIMIZU -- All Rights Reserved
 //- ------------------------------------------------------------------
-#ifndef _IO_MOCKIO_H_
-#define _IO_MOCKIO_H_
+#ifndef _IO_MOCK_IO_H_
+#define _IO_MOCK_IO_H_
 
 #include "gmock/gmock.h"
 #include "IO/Io.h"
@@ -26,4 +26,4 @@ extern IO *gMockIoPtr;
 
 } // namespace IO
 
-#endif  // _IO_MOCKIO_H_
+#endif  // _IO_MOCK_IO_H_
