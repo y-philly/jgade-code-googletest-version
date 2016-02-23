@@ -13,16 +13,10 @@ IO *gMockIoPtr = nullptr;
 
 void IO_Write(IoAddress addr, IoData value)
 {
-    // mock_c()->actualCall("IO_Write")
-    //         ->withIntParameters("addr", addr)
-    //         ->withIntParameters("value", value);
+    IO::gMockIoPtr->Write(addr, value);
 }
 
 IoData IO_Read(IoAddress addr)
 {
-   //  mock_c()->actualCall("IO_Read")
-   //          ->withIntParameters("addr", addr);
-   //
-   // return mock_c()->returnValue().value.intValue;
-   return 0U;
+   return IO::gMockIoPtr->Read(addr);
 }
