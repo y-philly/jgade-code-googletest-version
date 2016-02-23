@@ -196,12 +196,17 @@ ctags_option = -R --c++-kinds=+pl --fields=+iaS --extra=+q
 
 .PHONY: tags
 tags:
-	ctags $(ctags_option) $(PRODUCT_CODE_DIR)
+	ctags $(ctags_option) $(src_dir)
+	ctags $(ctags_option) $(PRJ_ROOT)/include
 	ctags $(ctags_option) --append=yes .
+
+comma:= ,
+empty:=
+space:= $(empty) $(empty)
 
 .PHONY: cscope
 cscope:
-	cscope -R -q -b -s $(include_dir) $(src_dir)
+	cscope -R -q -b -s $(subst $(space),$(comma),$(include_dir)),$(src_dir)
 
 .PHONY: include_paths.vim
 include_paths.vim:
