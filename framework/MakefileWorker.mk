@@ -210,10 +210,7 @@ cscope:
 
 .PHONY: include_paths.vim
 include_paths.vim:
-	@echo "let include_paths = [" $(foreach path,$(include_dir),\"$(shell cygpath -m $(path))\",) > /tmp/include_paths.txt
-	@sed -e "s/,$$/ ]/g" /tmp/include_paths.txt > include_paths.vim
-	@echo "let g:marching_include_paths += include_paths" >> include_paths.vim
-	@rm -f /tmp/include_paths.txt
+	$(ut_framework_dir)/script/make-vim-marching_include_paths.sh $(include_dir)
 
 debug:
 	@echo
