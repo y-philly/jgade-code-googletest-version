@@ -23,8 +23,9 @@
 /*-                                                                    -*/
 /*-    www.renaissancesoftware.net james@renaissancesoftware.net       -*/
 /*- ------------------------------------------------------------------ -*/
-
-
+/*- ------------------------------------------------------------------ -*/
+/*-    Yasuhiro SHIMIZU modifed this file.                             -*/
+/*- ------------------------------------------------------------------ -*/
 
 #ifndef D_CircularBuffer_H
 #define D_CircularBuffer_H
