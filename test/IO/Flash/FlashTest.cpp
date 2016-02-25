@@ -19,8 +19,6 @@
 //-    Yasuhiro SHIMIZU ported this code to GoogleTest.
 //- ------------------------------------------------------------------
 
-#include "gmock/gmock.h"
-
 #include "IO/MockIO.h"
 #include "IO/MockMicroTime.h"
 

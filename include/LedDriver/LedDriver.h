@@ -27,21 +27,30 @@
 /*-    Yasuhiro SHIMIZU modifed this file.                             -*/
 /*- ------------------------------------------------------------------ -*/
 
-#ifndef D_RuntimeError_H
-#define D_RuntimeError_H
+#ifndef D_LedDriver_H
+#define D_LedDriver_H
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-void RuntimeError(const char * message, int parameter,
-		  const char * file, int line);
+#include <stdint.h>
+#include <stdbool.h>
 
-#define RUNTIME_ERROR(description, parameter)\
-    RuntimeError(description, parameter, __FILE__, __LINE__)
+
+void LedDriver_Create(uint16_t * ledsAddress);
+void LedDriver_Destroy(void);
+
+void LedDriver_TurnOn(int ledNumber);
+void LedDriver_TurnOff(int ledNumber);
+void LedDriver_TurnAllOn(void);
+void LedDriver_TurnAllOff(void);
+bool LedDriver_IsOn(int ledNumber);
+bool LedDriver_IsOff(int ledNumber);
+
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif
+#endif  /* D_LedDriver_H */
