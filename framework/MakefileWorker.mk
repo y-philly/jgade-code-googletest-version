@@ -210,7 +210,7 @@ cscope:
 
 .PHONY: include_paths.vim
 include_paths.vim:
-	$(ut_framework_dir)/script/make-vim-marching_include_paths.sh $(include_dir)
+	@$(ut_framework_dir)/script/make-vim-marching_include_paths.sh $(include_dir)
 
 debug:
 	@echo
