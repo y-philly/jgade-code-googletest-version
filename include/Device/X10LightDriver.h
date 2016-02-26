@@ -1,9 +1,9 @@
 /***
  * Excerpted from "Test-Driven Development for Embedded C",
  * published by The Pragmatic Bookshelf.
- * Copyrights apply to this code. It may not be used to create training material,
+ * Copyrights apply to this code. It may not be used to create training material, 
  * courses, books, articles, and the like. Contact us if you are in doubt.
- * We make no guarantees that this code is fit for any purpose.
+ * We make no guarantees that this code is fit for any purpose. 
  * Visit http://www.pragmaticprogrammer.com/titles/jgade for more book information.
 ***/
 /*- ------------------------------------------------------------------ -*/
@@ -23,37 +23,19 @@
 /*-                                                                    -*/
 /*-    www.renaissancesoftware.net james@renaissancesoftware.net       -*/
 /*- ------------------------------------------------------------------ -*/
-/*- ------------------------------------------------------------------ -*/
-/*-    Modified by Yasuhiro SHIMIZU.                                   -*/
-/*- ------------------------------------------------------------------ -*/
 
+#ifndef D_X10LightDriver_H
+#define D_X10LightDriver_H
 
-#ifndef D_Flash_H
-#define D_Flash_H
+#include "LightDriver.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+typedef struct X10LightDriverStruct * X10LightDriver;
 
-#include "IO.h"
+typedef enum X10_HouseCode {
+    X10_A,X10_B,X10_C,X10_D,X10_E,X10_F,
+    X10_G,X10_H,X10_I,X10_J,X10_K,X10_L,
+    X10_M,X10_N,X10_O,X10_P } X10_HouseCode;
 
-void Flash_Create(void);
-void Flash_Destroy(void);
-int Flash_Write(IoAddress offset, IoData data);
+LightDriver X10LightDriver_Create(int id, X10_HouseCode code, int unit);
 
-typedef enum
-{
-	FLASH_SUCCESS = 0,
-	FLASH_VPP_ERROR,
-	FLASH_PROGRAM_ERROR,
-	FLASH_PROTECTED_BLOCK_ERROR,
-	FLASH_UNKNOWN_PROGRAM_ERROR,
-	FLASH_READ_BACK_ERROR,
-	FLASH_TIMEOUT_ERROR
-} FlashStatus;
-
-#ifdef __cplusplus
-}
-#endif
-
-#endif  /* D_Flash_H */
+#endif  /* D_X10LightDriver_H */

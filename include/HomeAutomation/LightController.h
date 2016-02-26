@@ -27,33 +27,27 @@
 /*-    Modified by Yasuhiro SHIMIZU.                                   -*/
 /*- ------------------------------------------------------------------ -*/
 
-
-#ifndef D_Flash_H
-#define D_Flash_H
+#ifndef D_LightController_H
+#define D_LightController_H
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#include "IO.h"
+#include <stdbool.h>
+#include "Device/LightDriver.h"
 
-void Flash_Create(void);
-void Flash_Destroy(void);
-int Flash_Write(IoAddress offset, IoData data);
+enum {MAX_LIGHTS = 32};
 
-typedef enum
-{
-	FLASH_SUCCESS = 0,
-	FLASH_VPP_ERROR,
-	FLASH_PROGRAM_ERROR,
-	FLASH_PROTECTED_BLOCK_ERROR,
-	FLASH_UNKNOWN_PROGRAM_ERROR,
-	FLASH_READ_BACK_ERROR,
-	FLASH_TIMEOUT_ERROR
-} FlashStatus;
+void LightController_Create(void);
+void LightController_Destroy(void);
+bool LightController_TurnOn(int id);
+bool LightController_TurnOff(int id);
+bool LightController_Add(int id, LightDriver);
+bool LightController_Remove(int id);
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif  /* D_Flash_H */
+#endif  /* D_LightController_H */

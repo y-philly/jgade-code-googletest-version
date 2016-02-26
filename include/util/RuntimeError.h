@@ -24,7 +24,7 @@
 /*-    www.renaissancesoftware.net james@renaissancesoftware.net       -*/
 /*- ------------------------------------------------------------------ -*/
 /*- ------------------------------------------------------------------ -*/
-/*-    Yasuhiro SHIMIZU modifed this file.                             -*/
+/*-    Modified by Yasuhiro SHIMIZU.                                   -*/
 /*- ------------------------------------------------------------------ -*/
 
 #ifndef D_RuntimeError_H

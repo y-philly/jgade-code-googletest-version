@@ -1,9 +1,9 @@
 /***
  * Excerpted from "Test-Driven Development for Embedded C",
  * published by The Pragmatic Bookshelf.
- * Copyrights apply to this code. It may not be used to create training material,
+ * Copyrights apply to this code. It may not be used to create training material, 
  * courses, books, articles, and the like. Contact us if you are in doubt.
- * We make no guarantees that this code is fit for any purpose.
+ * We make no guarantees that this code is fit for any purpose. 
  * Visit http://www.pragmaticprogrammer.com/titles/jgade for more book information.
 ***/
 /*- ------------------------------------------------------------------ -*/
@@ -23,37 +23,11 @@
 /*-                                                                    -*/
 /*-    www.renaissancesoftware.net james@renaissancesoftware.net       -*/
 /*- ------------------------------------------------------------------ -*/
-/*- ------------------------------------------------------------------ -*/
-/*-    Modified by Yasuhiro SHIMIZU.                                   -*/
-/*- ------------------------------------------------------------------ -*/
 
+#ifndef D_RandomMinute_H
+#define D_RandomMinute_H
 
-#ifndef D_Flash_H
-#define D_Flash_H
+void RandomMinute_Create(int bound);
+extern int (*RandomMinute_Get)(void);
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-#include "IO.h"
-
-void Flash_Create(void);
-void Flash_Destroy(void);
-int Flash_Write(IoAddress offset, IoData data);
-
-typedef enum
-{
-	FLASH_SUCCESS = 0,
-	FLASH_VPP_ERROR,
-	FLASH_PROGRAM_ERROR,
-	FLASH_PROTECTED_BLOCK_ERROR,
-	FLASH_UNKNOWN_PROGRAM_ERROR,
-	FLASH_READ_BACK_ERROR,
-	FLASH_TIMEOUT_ERROR
-} FlashStatus;
-
-#ifdef __cplusplus
-}
-#endif
-
-#endif  /* D_Flash_H */
+#endif  /* D_RandomMinute_H */

@@ -27,33 +27,31 @@
 /*-    Modified by Yasuhiro SHIMIZU.                                   -*/
 /*- ------------------------------------------------------------------ -*/
 
-
-#ifndef D_Flash_H
-#define D_Flash_H
+#ifndef D_LightDriverPrivate_H
+#define D_LightDriverPrivate_H
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#include "IO.h"
+typedef struct LightDriverInterfaceStruct * LightDriverInterface;
 
-void Flash_Create(void);
-void Flash_Destroy(void);
-int Flash_Write(IoAddress offset, IoData data);
-
-typedef enum
+typedef struct LightDriverStruct
 {
-	FLASH_SUCCESS = 0,
-	FLASH_VPP_ERROR,
-	FLASH_PROGRAM_ERROR,
-	FLASH_PROTECTED_BLOCK_ERROR,
-	FLASH_UNKNOWN_PROGRAM_ERROR,
-	FLASH_READ_BACK_ERROR,
-	FLASH_TIMEOUT_ERROR
-} FlashStatus;
+    LightDriverInterface vtable;
+    const char * type;
+    int id;
+} LightDriverStruct;
+
+typedef struct LightDriverInterfaceStruct
+{
+    void (*TurnOn)(LightDriver);
+    void (*TurnOff)(LightDriver);
+    void (*Destroy)(LightDriver);
+} LightDriverInterfaceStruct;
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif  /* D_Flash_H */
+#endif  /* D_LightDriverPrivate_H */

@@ -28,32 +28,81 @@
 /*- ------------------------------------------------------------------ -*/
 
 
-#ifndef D_Flash_H
-#define D_Flash_H
+#include <stdbool.h>
+#include <stdlib.h>
+#include <string.h>
+#include "HomeAutomation/LightController.h"
+#include "Device/LightDriver.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+static LightDriver lightDrivers[MAX_LIGHTS] = {NULL};
 
-#include "IO.h"
-
-void Flash_Create(void);
-void Flash_Destroy(void);
-int Flash_Write(IoAddress offset, IoData data);
-
-typedef enum
+void LightController_Create(void)
 {
-	FLASH_SUCCESS = 0,
-	FLASH_VPP_ERROR,
-	FLASH_PROGRAM_ERROR,
-	FLASH_PROTECTED_BLOCK_ERROR,
-	FLASH_UNKNOWN_PROGRAM_ERROR,
-	FLASH_READ_BACK_ERROR,
-	FLASH_TIMEOUT_ERROR
-} FlashStatus;
-
-#ifdef __cplusplus
+    memset(lightDrivers, 0, sizeof(lightDrivers));
 }
-#endif
 
-#endif  /* D_Flash_H */
+void LightController_Destroy(void)
+{
+    int i;
+    for (i = 0; i < MAX_LIGHTS; i++)
+    {
+        LightDriver driver = lightDrivers[i];
+        LightDriver_Destroy(driver);
+        lightDrivers[i] = NULL;
+    }
+}
+
+static bool isIdInBounds(int id)
+{
+    return id < 0 || id >= MAX_LIGHTS;
+}
+
+bool LightController_Add(int id, LightDriver lightDriver)
+{
+    if (isIdInBounds(id))
+        return false;
+
+    if (lightDriver == NULL)
+        return false;
+
+    LightDriver_Destroy(lightDrivers[id]);
+
+    lightDrivers[id] = lightDriver;
+    return true;
+}
+
+bool LightController_Remove(int id)
+{
+    if (isIdInBounds(id))
+        return false;
+
+    if (lightDrivers[id] == NULL)
+        return false;
+
+    LightDriver_Destroy(lightDrivers[id]);
+
+    lightDrivers[id] = NULL;
+    return true;
+}
+
+bool LightController_TurnOn(int id)
+{
+    if(lightDrivers[id] == NULL) return false;
+
+    LightDriver_TurnOn(lightDrivers[id]);
+    return true;
+}
+
+bool LightController_TurnOff(int id)
+{
+    if(lightDrivers[id] == NULL) return false;
+
+    LightDriver_TurnOff(lightDrivers[id]);
+    return true;
+}
+
+
+
+
+
+

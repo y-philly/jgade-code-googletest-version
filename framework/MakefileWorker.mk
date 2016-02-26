@@ -47,7 +47,7 @@ ifndef UT_WARNINGFLAGS
 endif
 compile_flags += $(UT_WARNINGFLAGS)
 
-LD_LIBRARLIES +=  -lpthread -lstdc++
+LD_LIBRARLIES += -lpthread -lstdc++
 
 ifeq ($(UT_ENABLE_DEBUG), y)
   compile_flags += -g -O0
@@ -120,15 +120,6 @@ mock_obj = $(call src_to_o,$(MOCK_CODE))
 all_src = $(SRC) $(TEST_CODE) $(MOCK_CODE) $(gmock_src) $(gtest_src)
 dependents = $(call src_to_d,$(all_src))
 
-#
-# Coverage settings
-#
-lcov    := $(ut_framework_dir)/tools/lcov-1.11/bin/lcov
-genhtml := $(ut_framework_root)/tools/lcov-1.11/bin/genhtml
-lcovrc  := $(ut_framework_dir)/tools/lcovrc
-lcov_tracefile := lcov.info
-lcov_remove_pattern := "/usr/lib/*" "/usr/include/*" "*gtest*" "*gmock*" "*mock*" "*Test*"
-
 # Test coverage with gcov
 gcov_gcda_files = $(call src_to_gcda, $(all_src))
 gcov_gcno_files = $(call src_to_gcno, $(all_src))
@@ -138,11 +129,8 @@ stuff_to_clean += $(gcov_gcda_files) \
 #The gcda files for gcov need to be deleted before each run
 #To avoid annoying messages.
 covfile_clean = rm -f $(gcov_gcda_files) $(gcov_output) $(gcov_report) $(gcov_error) ; \
-                rm -rf $(LCOV_TRACEFILE) coverage-report
+                rm -rf $(lcov_tracefile) coverage-report
 run_test_target = $(covfile_clean) ; ./$(test_target) ;
-gen_covfile = $(lcov) --capture --directory ./obj --output-file $(lcov_tracefile) --config-file $(LCOVRC); \
-              $(lcov) --remove $(lcov_tracefile) $(lcov_remove_pattern) --output-file $(lcov_tracefile) --config-file $(lcovrc); \
-              $(genhtml) $(lcov_tracefile) --output-directory coverage-report --config-file $(lcovrc)
 
 stuff_to_clean = $(obj) $(test_obj) $(mock_obj) $(dependents) $(gmock_obj) $(gtest_obj)
 
@@ -156,7 +144,7 @@ all: $(test_target)
 
 .PHONY: coverage
 coverage: all
-	$(gen_covfile)
+	$(ut_framework_dir)/script/coverage-report.sh $(ut_framework_dir)
 
 .PHONY: build
 build: $(test_target)
