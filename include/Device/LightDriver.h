@@ -27,76 +27,26 @@
 /*-    Modified by Yasuhiro SHIMIZU.                                   -*/
 /*- ------------------------------------------------------------------ -*/
 
+#ifndef D_LightDriver_H
+#define D_LightDriver_H
 
-#include <stdbool.h>
-#include <stdlib.h>
-#include <memory.h>
-#include "HomeAutomation/LightController.h"
-#include "Device/LightDriver.h"
+#ifdef __cplusplus
+extern "C" {
+#endif
 
-static LightDriver lightDrivers[MAX_LIGHTS] = {NULL};
+typedef struct LightDriverStruct  * LightDriver;
 
-void LightController_Create(void)
-{
-    memset(lightDrivers, 0, sizeof lightDrivers);
+void LightDriver_Destroy(LightDriver);
+void LightDriver_TurnOn(LightDriver);
+void LightDriver_TurnOff(LightDriver);
+const char * LightDriver_GetType(LightDriver driver);
+int LightDriver_GetId(LightDriver driver);
+
+
+#include "LightDriverPrivate.h"
+
+#ifdef __cplusplus
 }
+#endif
 
-void LightController_Destroy(void)
-{
-    int i;
-    for (i = 0; i < MAX_LIGHTS; i++)
-    {
-        LightDriver driver = lightDrivers[i];
-        LightDriver_Destroy(driver);
-        lightDrivers[i] = NULL;
-    }
-}
-
-static bool isIdInBounds(int id)
-{
-    return id < 0 || id >= MAX_LIGHTS;
-}
-
-bool LightController_Add(int id, LightDriver lightDriver)
-{
-    if (isIdInBounds(id))
-        return false;
-
-    if (lightDriver == NULL)
-        return false;
-
-    LightDriver_Destroy(lightDrivers[id]);
-
-    lightDrivers[id] = lightDriver;
-    return true;
-}
-
-bool LightController_Remove(int id)
-{
-    if (isIdInBounds(id))
-        return false;
-
-    if (lightDrivers[id] == NULL)
-        return false;
-
-    LightDriver_Destroy(lightDrivers[id]);
-
-    lightDrivers[id] = NULL;
-    return true;
-}
-
-void LightController_TurnOn(int id)
-{
-    LightDriver_TurnOn(lightDrivers[id]);
-}
-
-void LightController_TurnOff(int id)
-{
-    LightDriver_TurnOff(lightDrivers[id]);
-}
-
-
-
-
-
-
+#endif  /* D_LightDriver_H */

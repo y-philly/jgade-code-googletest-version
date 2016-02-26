@@ -1,9 +1,9 @@
 /***
  * Excerpted from "Test-Driven Development for Embedded C",
  * published by The Pragmatic Bookshelf.
- * Copyrights apply to this code. It may not be used to create training material,
+ * Copyrights apply to this code. It may not be used to create training material, 
  * courses, books, articles, and the like. Contact us if you are in doubt.
- * We make no guarantees that this code is fit for any purpose.
+ * We make no guarantees that this code is fit for any purpose. 
  * Visit http://www.pragmaticprogrammer.com/titles/jgade for more book information.
 ***/
 /*- ------------------------------------------------------------------ -*/
@@ -23,31 +23,19 @@
 /*-                                                                    -*/
 /*-    www.renaissancesoftware.net james@renaissancesoftware.net       -*/
 /*- ------------------------------------------------------------------ -*/
-/*- ------------------------------------------------------------------ -*/
-/*-    Modified by Yasuhiro SHIMIZU.                                   -*/
-/*- ------------------------------------------------------------------ -*/
 
-#ifndef D_LightController_H
-#define D_LightController_H
+#ifndef D_X10LightDriver_H
+#define D_X10LightDriver_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+#include "LightDriver.h"
 
-#include <stdbool.h>
-#include "Device/LightDriver.h"
+typedef struct X10LightDriverStruct * X10LightDriver;
 
-enum {MAX_LIGHTS = 32};
+typedef enum X10_HouseCode {
+    X10_A,X10_B,X10_C,X10_D,X10_E,X10_F,
+    X10_G,X10_H,X10_I,X10_J,X10_K,X10_L,
+    X10_M,X10_N,X10_O,X10_P } X10_HouseCode;
 
-void LightController_Create(void);
-void LightController_Destroy(void);
-void LightController_TurnOn(int id);
-void LightController_TurnOff(int id);
-bool LightController_Add(int id, LightDriver);
-bool LightController_Remove(int id);
+LightDriver X10LightDriver_Create(int id, X10_HouseCode code, int unit);
 
-#ifdef __cplusplus
-}
-#endif
-
-#endif  /* D_LightController_H */
+#endif  /* D_X10LightDriver_H */

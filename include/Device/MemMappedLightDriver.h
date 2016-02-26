@@ -1,9 +1,9 @@
 /***
  * Excerpted from "Test-Driven Development for Embedded C",
  * published by The Pragmatic Bookshelf.
- * Copyrights apply to this code. It may not be used to create training material,
+ * Copyrights apply to this code. It may not be used to create training material, 
  * courses, books, articles, and the like. Contact us if you are in doubt.
- * We make no guarantees that this code is fit for any purpose.
+ * We make no guarantees that this code is fit for any purpose. 
  * Visit http://www.pragmaticprogrammer.com/titles/jgade for more book information.
 ***/
 /*- ------------------------------------------------------------------ -*/
@@ -23,31 +23,15 @@
 /*-                                                                    -*/
 /*-    www.renaissancesoftware.net james@renaissancesoftware.net       -*/
 /*- ------------------------------------------------------------------ -*/
-/*- ------------------------------------------------------------------ -*/
-/*-    Modified by Yasuhiro SHIMIZU.                                   -*/
-/*- ------------------------------------------------------------------ -*/
 
-#ifndef D_LightController_H
-#define D_LightController_H
+#ifndef D_MemMappedLightDriver_H
+#define D_MemMappedLightDriver_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+#include "LightDriver.h"
+#include <stdint.h>
 
-#include <stdbool.h>
-#include "Device/LightDriver.h"
+typedef struct MemMappedLightDriverStruct * MemMappedLightDriver;
 
-enum {MAX_LIGHTS = 32};
+LightDriver MemMappedLightDriver_Create(int lightId, uint32_t * address);
 
-void LightController_Create(void);
-void LightController_Destroy(void);
-void LightController_TurnOn(int id);
-void LightController_TurnOff(int id);
-bool LightController_Add(int id, LightDriver);
-bool LightController_Remove(int id);
-
-#ifdef __cplusplus
-}
-#endif
-
-#endif  /* D_LightController_H */
+#endif  /* D_MemMappedLightDriver_H */
