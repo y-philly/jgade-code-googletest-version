@@ -85,14 +85,20 @@ bool LightController_Remove(int id)
     return true;
 }
 
-void LightController_TurnOn(int id)
+bool LightController_TurnOn(int id)
 {
+    if(lightDrivers[id] == NULL) return false;
+
     LightDriver_TurnOn(lightDrivers[id]);
+    return true;
 }
 
-void LightController_TurnOff(int id)
+bool LightController_TurnOff(int id)
 {
+    if(lightDrivers[id] == NULL) return false;
+
     LightDriver_TurnOff(lightDrivers[id]);
+    return true;
 }
 
 

@@ -141,7 +141,7 @@ TEST_F(LightController, all_drivers_destroyed)
     }
 }
 
-TEST_P(LightController, valid_id_is_in_range)
+TEST_P(LightController, can_be_added_light_when_id_is_in_bounds)
 {
     const int id = GetParam();
     const bool expectedResult = id_is_valid(id);
@@ -158,47 +158,62 @@ INSTANTIATE_TEST_CASE_P(
     LightController,
     ::testing::Values(0, (MAX_LIGHTS - 1), MAX_LIGHTS));
 
-#if 0
+INSTANTIATE_TEST_CASE_P(
+    OutOfRange,
+    LightController,
+    ::testing::Values(MAX_LIGHTS));
 
-TEST(LightController, RemoveExistingLightDriverSucceeds)
+
+TEST_F(LightController, remove_existing_light_driver_succeeds)
 {
-    CHECK(LightController_Remove(10));
+    EXPECT_CALL(mockLightDriver_, Destroy(_))
+        .Times(1);
+
+    LightController_Add(10, &lightDriverVector_[10]);
+
+    EXPECT_CALL(mockLightDriver_, Destroy(&lightDriverVector_[10]))
+        .Times(1);
+
+    LightController_Remove(10);
 }
 
-TEST(LightController, RemovedLightDoesNothing)
+TEST_F(LightController, removed_light_does_nothing)
 {
+    EXPECT_CALL(mockLightDriver_, Destroy(_))
+        .Times(1);
+
+    LightController_Add(1, &lightDriverVector_[1]);
+
+    EXPECT_CALL(mockLightDriver_, Destroy(&lightDriverVector_[1]))
+        .Times(1);
+
     LightController_Remove(1);
-    LightController_TurnOn(1);
-    LONGS_EQUAL(LIGHT_STATE_UNKNOWN, LightDriverSpy_GetState(1));
-    LightController_TurnOff(1);
-    LONGS_EQUAL(LIGHT_STATE_UNKNOWN, LightDriverSpy_GetState(1));
+
+    ASSERT_THAT(LightController_TurnOn(1), Eq(false));
+    ASSERT_THAT(LightController_TurnOff(1), Eq(false));
 }
 
-TEST(LightController, RejectsNullDrivers)
+TEST_F(LightController, rejects_null_drivers)
 {
-    LONGS_EQUAL(FALSE, LightController_Add(1, NULL));
+    ASSERT_THAT(LightController_Add(1, NULL), Eq(false));
 }
 
-TEST(LightController, RemoveNonExistingLightDriverFails)
+TEST_F(LightController, RemoveNonExistingLightDriverFails)
 {
-    CHECK(LightController_Remove(10));
-    CHECK(LightController_Remove(10) == FALSE);
+    ASSERT_THAT(LightController_Remove(10), Eq(false));
 }
 
-//START: turnOnDifferentDriverTypes
-TEST(LightController, turnOnDifferentDriverTypes)
-{
-    LightDriver otherDriver = CountingLightDriver_Create(5);
-    LightController_Add(5, otherDriver);
-    LightController_TurnOn(7);
-    LightController_TurnOn(5);
-    LightController_TurnOff(5);
-
-    LONGS_EQUAL(LIGHT_ON, LightDriverSpy_GetState(7));
-    LONGS_EQUAL(2, CountingLightDriver_GetCallCount(otherDriver));
-}
-//END: turnOnDifferentDriverTypes
-#endif
+// TEST(LightController, turnOnDifferentDriverTypes)
+// {
+//     LightDriver otherDriver = CountingLightDriver_Create(5);
+//     LightController_Add(5, otherDriver);
+//     LightController_TurnOn(7);
+//     LightController_TurnOn(5);
+//     LightController_TurnOff(5);
+//
+//     LONGS_EQUAL(LIGHT_ON, LightDriverSpy_GetState(7));
+//     LONGS_EQUAL(2, CountingLightDriver_GetCallCount(otherDriver));
+// }
 
 } // namespace LightControllerTest
 } // namespace HomeAutomation
