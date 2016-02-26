@@ -28,10 +28,18 @@ namespace HomeAutomation {
 namespace LightControllerTest {
 
 
+using ::testing::_;
 using ::testing::Eq;
+using ::testing::NotNull;
+using ::testing::Sequence;
 
 
-class LightController {
+class LightController : public ::testing::TestWithParam<int> {
+public:
+    LightController() : lightDriverVector_(MAX_LIGHTS)
+    {
+    }
+
 protected:
     virtual void SetUp()
     {
@@ -42,92 +50,115 @@ protected:
 
     virtual void TearDown()
     {
+        EXPECT_CALL(mockLightDriver_, Destroy(_))
+            .Times(MAX_LIGHTS);
+
         LightController_Destroy();
     }
 
+    bool id_is_valid(int id) const { return (0 <= id) && (id < MAX_LIGHTS); }
+
+    std::vector<::LightDriverStruct> lightDriverVector_;
+
     Device::MockLightDriver mockLightDriver_;
+
+    Sequence sequence_;
 };
 
 
-} // namespace LightControllerTest
-} // namespace HomeAutomation
-
-#if 0
-#include "LightDriverSpy.h"
-#include "CountingLightDriver.h"
-
-#include "CppUTest/TestHarness.h"
-//START: controllerTests
-TEST_GROUP(LightController)
+TEST(LifeCycleOfLightController, create_destroy)
 {
-    void setup()
-    {
-        LightController_Create();
-        LightDriverSpy_AddSpiesToController();
-        LightDriverSpy_Reset();
-    }
+    Device::MockLightDriver mockLightDriver;
+    Device::gLightDriverPtr = &mockLightDriver;
 
-    void teardown()
-    {
-       LightController_Destroy();
-    }
-};
-//END: controllerTests
+    LightController_Create();
 
-TEST(LightController, CreateDestroy)
-{
+    EXPECT_CALL(mockLightDriver, Destroy(_))
+        .Times(MAX_LIGHTS);
+
+    LightController_Destroy();
 }
 
-TEST(LightController, DriverIsDestroyedByLightController)
+
+TEST(LifeCycleOfLightController, driver_is_destroyed_by_light_controller)
 {
-    LightDriver spy = LightDriverSpy_Create(1);
-    LightController_Add(1, spy);
+    Device::MockLightDriver mockLightDriver;
+    Device::gLightDriverPtr = &mockLightDriver;
+
+    LightController_Create();
+
+    EXPECT_CALL(mockLightDriver, Destroy(_))
+        .Times(1);
+
+    ::LightDriverStruct aLightDriver;
+    LightController_Add(1, &aLightDriver);
+
+    EXPECT_CALL(mockLightDriver, Destroy(_))
+        .Times(MAX_LIGHTS - 1);
+
+    EXPECT_CALL(mockLightDriver, Destroy(&aLightDriver))
+        .Times(1);
+
+    LightController_Destroy();
 }
 
-//START: controllerTests
 
-//START: turnOn
-TEST(LightController, TurnOn)
+TEST_F(LightController, turn_on)
 {
+    EXPECT_CALL(mockLightDriver_, Destroy(_))
+        .Times(1);
+
+    LightController_Add(7, &lightDriverVector_[7]);
+
+    EXPECT_CALL(mockLightDriver_, TurnOn(&lightDriverVector_[7]))
+        .Times(1);
+
     LightController_TurnOn(7);
-    LONGS_EQUAL(LIGHT_ON, LightDriverSpy_GetState(7));
 }
-//END: turnOn
-//END: controllerTests
 
-TEST(LightController, TurnOff)
+
+TEST_F(LightController, turn_off)
 {
+    EXPECT_CALL(mockLightDriver_, Destroy(_))
+        .Times(1);
+
+    LightController_Add(1, &lightDriverVector_[1]);
+
+    EXPECT_CALL(mockLightDriver_, TurnOff(&lightDriverVector_[1]))
+        .Times(1);
+
     LightController_TurnOff(1);
-    LONGS_EQUAL(LIGHT_OFF, LightDriverSpy_GetState(1));
 }
 
-TEST(LightController, AllDriversDestroyed)
+TEST_F(LightController, all_drivers_destroyed)
 {
     for (int i = 0; i < MAX_LIGHTS; i++)
     {
-        LightDriver spy = LightDriverSpy_Create(i);
-        LONGS_EQUAL(TRUE, LightController_Add(i, (LightDriver)spy));
+        EXPECT_CALL(mockLightDriver_, Destroy(_))
+            .Times(1);
+
+        ASSERT_THAT(LightController_Add(i, &lightDriverVector_[i]), Eq(true));
     }
 }
 
-TEST(LightController, ValidIdLowerRange)
+TEST_P(LightController, valid_id_is_in_range)
 {
-    LightDriver spy = LightDriverSpy_Create(0);
-    LONGS_EQUAL(TRUE, LightController_Add(0, spy));
+    const int id = GetParam();
+    const bool expectedResult = id_is_valid(id);
+
+    if (expectedResult) {
+        EXPECT_CALL(mockLightDriver_, Destroy(_))
+            .Times(1);
+    }
+    ASSERT_THAT(LightController_Add(id, &lightDriverVector_[id]), Eq(expectedResult));
 }
 
-TEST(LightController, ValidIdUpperRange)
-{
-    LightDriver spy = LightDriverSpy_Create(MAX_LIGHTS);
-    LONGS_EQUAL(TRUE, LightController_Add(MAX_LIGHTS-1, spy));
-}
+INSTANTIATE_TEST_CASE_P(
+    InRange,
+    LightController,
+    ::testing::Values(0, (MAX_LIGHTS - 1), MAX_LIGHTS));
 
-TEST(LightController, InValidIdBeyondUpperRange)
-{
-    LightDriver spy = LightDriverSpy_Create(MAX_LIGHTS);
-    LONGS_EQUAL(FALSE, LightController_Add(MAX_LIGHTS, spy));
-    free(spy);
-}
+#if 0
 
 TEST(LightController, RemoveExistingLightDriverSucceeds)
 {
@@ -168,3 +199,6 @@ TEST(LightController, turnOnDifferentDriverTypes)
 }
 //END: turnOnDifferentDriverTypes
 #endif
+
+} // namespace LightControllerTest
+} // namespace HomeAutomation

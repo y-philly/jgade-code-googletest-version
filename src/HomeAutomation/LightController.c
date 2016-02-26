@@ -30,7 +30,7 @@
 
 #include <stdbool.h>
 #include <stdlib.h>
-#include <memory.h>
+#include <string.h>
 #include "HomeAutomation/LightController.h"
 #include "Device/LightDriver.h"
 
@@ -38,7 +38,7 @@ static LightDriver lightDrivers[MAX_LIGHTS] = {NULL};
 
 void LightController_Create(void)
 {
-    memset(lightDrivers, 0, sizeof lightDrivers);
+    memset(lightDrivers, 0, sizeof(lightDrivers));
 }
 
 void LightController_Destroy(void)
