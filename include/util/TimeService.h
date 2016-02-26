@@ -1,9 +1,9 @@
 /***
  * Excerpted from "Test-Driven Development for Embedded C",
  * published by The Pragmatic Bookshelf.
- * Copyrights apply to this code. It may not be used to create training material,
+ * Copyrights apply to this code. It may not be used to create training material, 
  * courses, books, articles, and the like. Contact us if you are in doubt.
- * We make no guarantees that this code is fit for any purpose.
+ * We make no guarantees that this code is fit for any purpose. 
  * Visit http://www.pragmaticprogrammer.com/titles/jgade for more book information.
 ***/
 /*- ------------------------------------------------------------------ -*/
@@ -23,60 +23,43 @@
 /*-                                                                    -*/
 /*-    www.renaissancesoftware.net james@renaissancesoftware.net       -*/
 /*- ------------------------------------------------------------------ -*/
-/*- ------------------------------------------------------------------ -*/
-/*-    Modifed by Yasuhiro SHIMIZU                                     -*/
-/*- ------------------------------------------------------------------ -*/
 
 
-#include "IO/Flash.h"
-#include "IO/IO.h"
-#include "IO/m28w160ect.h"
-#include "IO/MicroTime.h"
+#ifndef D_TimeService_H
+#define D_TimeService_H
 
-#define FLASH_WRITE_TIMEOUT_IN_MICROSECONDS 5000
+#include "common.h"
 
-void Flash_Create(void)
+typedef enum Day {
+    EVERYDAY=-3, WEEKDAY=-2, WEEKEND=-1,
+    SUNDAY=1, MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY
+} Day;
+
+typedef enum Month {
+    JAN=1, FEB, MAR, APR, MAY, JUN, JUL, AUG, SEP, OCT, NOV, DEC
+} Month;
+
+typedef struct Time Time;
+
+struct Time
 {
-}
+    int usec;
+    int sec;
+    int minuteOfDay;
+    int minuteOfHour;
+    Day dayOfWeek;
+    int dayOfMonth;
+    Month month;
+};
 
-void Flash_Destroy(void)
-{
-}
+void TimeService_Create(void);
+void TimeService_Destroy(void);
+int TimeService_GetMinute(void);
+int TimeService_GetDay(void);
 
-static int writeError(int status)
-{
-    IO_Write(CommandRegister, Reset);
-    if (status & VppErrorBit)
-        return FLASH_VPP_ERROR;
-    else if (status & ProgramErrorBit)
-        return FLASH_PROGRAM_ERROR;
-    else if (status & BlockProtectionErrorBit)
-        return FLASH_PROTECTED_BLOCK_ERROR;
-    else
-        return FLASH_UNKNOWN_PROGRAM_ERROR;
-}
+void TimeService_GetTime(Time *);
 
-int Flash_Write(IoAddress offset, IoData data)
-{
-    IoData status = 0;
-    uint32_t timestamp = MicroTime_Get();
+BOOL Time_MatchesDayOfWeek(Time *, Day day);
+BOOL Time_MatchesMinuteOfDay(Time *, int minute);
 
-    IO_Write(CommandRegister, ProgramCommand);
-    IO_Write(offset, data);
-
-    status = IO_Read(StatusRegister);
-    while ((status & ReadyBit) == 0)
-    {
-        if (MicroTime_Get() - timestamp >= FLASH_WRITE_TIMEOUT_IN_MICROSECONDS)
-            return FLASH_TIMEOUT_ERROR;
-        status = IO_Read(StatusRegister);
-    }
-
-    if (status != ReadyBit)
-        return writeError(status);
-
-    if (data != IO_Read(offset))
-        return FLASH_READ_BACK_ERROR;
-
-    return FLASH_SUCCESS;
-}
+#endif  /* D_TimeService_H */

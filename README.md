@@ -3,3 +3,11 @@
 This repository uses [jgade-code](https://pragprog.com/titles/jgade/source_code).
 
 Thanks for James Grenning who is author of `Test Driven Development for Embedded C`
+
+## Platforms
+
+This sample has been used on only Cygwin.
+
+### Cygwin Requirements
+
+* Cygwin v2.4.1 or newer

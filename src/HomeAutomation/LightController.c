@@ -24,59 +24,85 @@
 /*-    www.renaissancesoftware.net james@renaissancesoftware.net       -*/
 /*- ------------------------------------------------------------------ -*/
 /*- ------------------------------------------------------------------ -*/
-/*-    Modifed by Yasuhiro SHIMIZU                                     -*/
+/*-    Modified by Yasuhiro SHIMIZU.                                   -*/
 /*- ------------------------------------------------------------------ -*/
 
 
-#include "IO/Flash.h"
-#include "IO/IO.h"
-#include "IO/m28w160ect.h"
-#include "IO/MicroTime.h"
+#include <stdbool.h>
+#include <stdlib.h>
+#include <string.h>
+#include "HomeAutomation/LightController.h"
+#include "Device/LightDriver.h"
 
-#define FLASH_WRITE_TIMEOUT_IN_MICROSECONDS 5000
+static LightDriver lightDrivers[MAX_LIGHTS] = {NULL};
 
-void Flash_Create(void)
+void LightController_Create(void)
 {
+    memset(lightDrivers, 0, sizeof(lightDrivers));
 }
 
-void Flash_Destroy(void)
+void LightController_Destroy(void)
 {
-}
-
-static int writeError(int status)
-{
-    IO_Write(CommandRegister, Reset);
-    if (status & VppErrorBit)
-        return FLASH_VPP_ERROR;
-    else if (status & ProgramErrorBit)
-        return FLASH_PROGRAM_ERROR;
-    else if (status & BlockProtectionErrorBit)
-        return FLASH_PROTECTED_BLOCK_ERROR;
-    else
-        return FLASH_UNKNOWN_PROGRAM_ERROR;
-}
-
-int Flash_Write(IoAddress offset, IoData data)
-{
-    IoData status = 0;
-    uint32_t timestamp = MicroTime_Get();
-
-    IO_Write(CommandRegister, ProgramCommand);
-    IO_Write(offset, data);
-
-    status = IO_Read(StatusRegister);
-    while ((status & ReadyBit) == 0)
+    int i;
+    for (i = 0; i < MAX_LIGHTS; i++)
     {
-        if (MicroTime_Get() - timestamp >= FLASH_WRITE_TIMEOUT_IN_MICROSECONDS)
-            return FLASH_TIMEOUT_ERROR;
-        status = IO_Read(StatusRegister);
+        LightDriver driver = lightDrivers[i];
+        LightDriver_Destroy(driver);
+        lightDrivers[i] = NULL;
     }
-
-    if (status != ReadyBit)
-        return writeError(status);
-
-    if (data != IO_Read(offset))
-        return FLASH_READ_BACK_ERROR;
-
-    return FLASH_SUCCESS;
 }
+
+static bool isIdInBounds(int id)
+{
+    return id < 0 || id >= MAX_LIGHTS;
+}
+
+bool LightController_Add(int id, LightDriver lightDriver)
+{
+    if (isIdInBounds(id))
+        return false;
+
+    if (lightDriver == NULL)
+        return false;
+
+    LightDriver_Destroy(lightDrivers[id]);
+
+    lightDrivers[id] = lightDriver;
+    return true;
+}
+
+bool LightController_Remove(int id)
+{
+    if (isIdInBounds(id))
+        return false;
+
+    if (lightDrivers[id] == NULL)
+        return false;
+
+    LightDriver_Destroy(lightDrivers[id]);
+
+    lightDrivers[id] = NULL;
+    return true;
+}
+
+bool LightController_TurnOn(int id)
+{
+    if(lightDrivers[id] == NULL) return false;
+
+    LightDriver_TurnOn(lightDrivers[id]);
+    return true;
+}
+
+bool LightController_TurnOff(int id)
+{
+    if(lightDrivers[id] == NULL) return false;
+
+    LightDriver_TurnOff(lightDrivers[id]);
+    return true;
+}
+
+
+
+
+
+

@@ -24,59 +24,30 @@
 /*-    www.renaissancesoftware.net james@renaissancesoftware.net       -*/
 /*- ------------------------------------------------------------------ -*/
 /*- ------------------------------------------------------------------ -*/
-/*-    Modifed by Yasuhiro SHIMIZU                                     -*/
+/*-    Modified by Yasuhiro SHIMIZU.                                   -*/
 /*- ------------------------------------------------------------------ -*/
 
+#ifndef D_LightController_H
+#define D_LightController_H
 
-#include "IO/Flash.h"
-#include "IO/IO.h"
-#include "IO/m28w160ect.h"
-#include "IO/MicroTime.h"
+#ifdef __cplusplus
+extern "C" {
+#endif
 
-#define FLASH_WRITE_TIMEOUT_IN_MICROSECONDS 5000
+#include <stdbool.h>
+#include "Device/LightDriver.h"
 
-void Flash_Create(void)
-{
+enum {MAX_LIGHTS = 32};
+
+void LightController_Create(void);
+void LightController_Destroy(void);
+bool LightController_TurnOn(int id);
+bool LightController_TurnOff(int id);
+bool LightController_Add(int id, LightDriver);
+bool LightController_Remove(int id);
+
+#ifdef __cplusplus
 }
+#endif
 
-void Flash_Destroy(void)
-{
-}
-
-static int writeError(int status)
-{
-    IO_Write(CommandRegister, Reset);
-    if (status & VppErrorBit)
-        return FLASH_VPP_ERROR;
-    else if (status & ProgramErrorBit)
-        return FLASH_PROGRAM_ERROR;
-    else if (status & BlockProtectionErrorBit)
-        return FLASH_PROTECTED_BLOCK_ERROR;
-    else
-        return FLASH_UNKNOWN_PROGRAM_ERROR;
-}
-
-int Flash_Write(IoAddress offset, IoData data)
-{
-    IoData status = 0;
-    uint32_t timestamp = MicroTime_Get();
-
-    IO_Write(CommandRegister, ProgramCommand);
-    IO_Write(offset, data);
-
-    status = IO_Read(StatusRegister);
-    while ((status & ReadyBit) == 0)
-    {
-        if (MicroTime_Get() - timestamp >= FLASH_WRITE_TIMEOUT_IN_MICROSECONDS)
-            return FLASH_TIMEOUT_ERROR;
-        status = IO_Read(StatusRegister);
-    }
-
-    if (status != ReadyBit)
-        return writeError(status);
-
-    if (data != IO_Read(offset))
-        return FLASH_READ_BACK_ERROR;
-
-    return FLASH_SUCCESS;
-}
+#endif  /* D_LightController_H */
