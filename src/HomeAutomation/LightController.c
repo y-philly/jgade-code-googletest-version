@@ -25,19 +25,75 @@
 /*- ------------------------------------------------------------------ -*/
 
 
-#ifndef D_LightController_H
-#define D_LightController_H
-
+#include "LightController.h"
+#include <stdlib.h>
+#include <memory.h>
 #include "LightDriver.h"
 #include "common.h"
 
-enum {MAX_LIGHTS = 32};
+static LightDriver lightDrivers[MAX_LIGHTS] = {NULL};
 
-void LightController_Create(void);
-void LightController_Destroy(void);
-void LightController_TurnOn(int id);
-void LightController_TurnOff(int id);
-BOOL LightController_Add(int id, LightDriver);
-BOOL LightController_Remove(int id);
+void LightController_Create(void)
+{
+    memset(lightDrivers, 0, sizeof lightDrivers);
+}
 
-#endif  /* D_LightController_H */
+void LightController_Destroy(void)
+{
+    int i;
+    for (i = 0; i < MAX_LIGHTS; i++)
+    {
+        LightDriver driver = lightDrivers[i];
+        LightDriver_Destroy(driver);
+        lightDrivers[i] = NULL;
+    }
+}
+
+static BOOL isIdInBounds(int id)
+{
+    return id < 0 || id >= MAX_LIGHTS;
+}
+
+BOOL LightController_Add(int id, LightDriver lightDriver)
+{
+    if (isIdInBounds(id))
+        return FALSE;
+
+    if (lightDriver == NULL)
+        return FALSE;
+
+    LightDriver_Destroy(lightDrivers[id]);
+
+    lightDrivers[id] = lightDriver;
+    return TRUE;
+}
+
+BOOL LightController_Remove(int id)
+{
+    if (isIdInBounds(id))
+        return FALSE;
+
+    if (lightDrivers[id] == NULL)
+        return FALSE;
+
+    LightDriver_Destroy(lightDrivers[id]);
+
+    lightDrivers[id] = NULL;
+    return TRUE;
+}
+
+void LightController_TurnOn(int id)
+{
+    LightDriver_TurnOn(lightDrivers[id]);
+}
+
+void LightController_TurnOff(int id)
+{
+    LightDriver_TurnOff(lightDrivers[id]);
+}
+
+
+
+
+
+

@@ -1,9 +1,9 @@
 /***
  * Excerpted from "Test-Driven Development for Embedded C",
  * published by The Pragmatic Bookshelf.
- * Copyrights apply to this code. It may not be used to create training material,
+ * Copyrights apply to this code. It may not be used to create training material, 
  * courses, books, articles, and the like. Contact us if you are in doubt.
- * We make no guarantees that this code is fit for any purpose.
+ * We make no guarantees that this code is fit for any purpose. 
  * Visit http://www.pragmaticprogrammer.com/titles/jgade for more book information.
 ***/
 /*- ------------------------------------------------------------------ -*/
@@ -24,27 +24,21 @@
 /*-    www.renaissancesoftware.net james@renaissancesoftware.net       -*/
 /*- ------------------------------------------------------------------ -*/
 
+#include "RandomMinute.h"
+#include <stdlib.h>
+#include <string.h>
 
-#ifndef D_TimeService_H
-#define D_TimeService_H
+static int bound = 0;
 
-typedef struct Time
+void RandomMinute_Create(int b)
 {
-    int minuteOfDay;
-    int dayOfWeek;
-} Time;
+    bound = b;
+}
 
-void TimeService_Create(void);
-void TimeService_Destroy(void);
-void TimeService_GetTime(Time *);
+int RandomMinute_GetImpl(void)
+{
+    return bound - rand() % (bound * 2 + 1);
+}
 
-typedef void (*WakeupCallback)(void);
+int (*RandomMinute_Get)(void) = RandomMinute_GetImpl;
 
-void TimeService_SetPeriodicAlarmInSeconds(
-        int seconds, WakeupCallback);
-
-void TimeService_CancelPeriodicAlarmInSeconds(
-        int seconds, WakeupCallback);
-
-
-#endif  /* D_TimeService_H */

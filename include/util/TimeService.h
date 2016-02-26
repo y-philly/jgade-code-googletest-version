@@ -25,19 +25,41 @@
 /*- ------------------------------------------------------------------ -*/
 
 
-#ifndef D_LightController_H
-#define D_LightController_H
+#ifndef D_TimeService_H
+#define D_TimeService_H
 
-#include "LightDriver.h"
 #include "common.h"
 
-enum {MAX_LIGHTS = 32};
+typedef enum Day {
+    EVERYDAY=-3, WEEKDAY=-2, WEEKEND=-1,
+    SUNDAY=1, MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY
+} Day;
 
-void LightController_Create(void);
-void LightController_Destroy(void);
-void LightController_TurnOn(int id);
-void LightController_TurnOff(int id);
-BOOL LightController_Add(int id, LightDriver);
-BOOL LightController_Remove(int id);
+typedef enum Month {
+    JAN=1, FEB, MAR, APR, MAY, JUN, JUL, AUG, SEP, OCT, NOV, DEC
+} Month;
 
-#endif  /* D_LightController_H */
+typedef struct Time Time;
+
+struct Time
+{
+    int usec;
+    int sec;
+    int minuteOfDay;
+    int minuteOfHour;
+    Day dayOfWeek;
+    int dayOfMonth;
+    Month month;
+};
+
+void TimeService_Create(void);
+void TimeService_Destroy(void);
+int TimeService_GetMinute(void);
+int TimeService_GetDay(void);
+
+void TimeService_GetTime(Time *);
+
+BOOL Time_MatchesDayOfWeek(Time *, Day day);
+BOOL Time_MatchesMinuteOfDay(Time *, int minute);
+
+#endif  /* D_TimeService_H */

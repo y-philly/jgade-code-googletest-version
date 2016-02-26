@@ -24,20 +24,10 @@
 /*-    www.renaissancesoftware.net james@renaissancesoftware.net       -*/
 /*- ------------------------------------------------------------------ -*/
 
+#ifndef D_RandomMinute_H
+#define D_RandomMinute_H
 
-#ifndef D_LightController_H
-#define D_LightController_H
+void RandomMinute_Create(int bound);
+extern int (*RandomMinute_Get)(void);
 
-#include "LightDriver.h"
-#include "common.h"
-
-enum {MAX_LIGHTS = 32};
-
-void LightController_Create(void);
-void LightController_Destroy(void);
-void LightController_TurnOn(int id);
-void LightController_TurnOff(int id);
-BOOL LightController_Add(int id, LightDriver);
-BOOL LightController_Remove(int id);
-
-#endif  /* D_LightController_H */
+#endif  /* D_RandomMinute_H */
