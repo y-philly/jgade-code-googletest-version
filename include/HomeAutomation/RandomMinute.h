@@ -32,7 +32,7 @@ extern "C" {
 #endif
 
 void RandomMinute_Create(int bound);
-extern int (*RandomMinute_Get)(void);
+int RandomMinute_Get(void);
 
 #ifdef __cplusplus
 }
