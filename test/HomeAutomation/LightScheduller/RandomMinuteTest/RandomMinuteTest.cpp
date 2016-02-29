@@ -26,6 +26,7 @@
 #include "HomeAutomation/RandomMinute.h"
 
 
+namespace HomeAutomation {
 namespace RumdomMinuteTest {
 
 
@@ -83,3 +84,4 @@ TEST_F(RandomMinute, all_values_possible)
 
 
 } // namespace RumdomMinuteTest
+} // namespace HomeAutomation

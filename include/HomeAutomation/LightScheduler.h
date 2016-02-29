@@ -1,9 +1,9 @@
 /***
  * Excerpted from "Test-Driven Development for Embedded C",
  * published by The Pragmatic Bookshelf.
- * Copyrights apply to this code. It may not be used to create training material, 
+ * Copyrights apply to this code. It may not be used to create training material,
  * courses, books, articles, and the like. Contact us if you are in doubt.
- * We make no guarantees that this code is fit for any purpose. 
+ * We make no guarantees that this code is fit for any purpose.
  * Visit http://www.pragmaticprogrammer.com/titles/jgade for more book information.
 ***/
 /*- ------------------------------------------------------------------ -*/
@@ -27,6 +27,10 @@
 #ifndef D_LightScheduler_H
 #define D_LightScheduler_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 void LightScheduler_Create(void);
 void LightScheduler_Destroy(void);
 void LightScheduler_ScheduleTurnOn(int id, int day, long int minute);
@@ -34,4 +38,9 @@ void LightScheduler_ScheduleTurnOff(int id, int day, long int minute);
 void LightScheduler_Randomize(int id, int day, long int minute);
 void LightScheduler_ScheduleRemove(int id, int day, long int minute);
 void LightScheduler_WakeUp(void);
+
+#ifdef __cplusplus
+}
+#endif
+
 #endif  /* D_LightScheduler_H */
