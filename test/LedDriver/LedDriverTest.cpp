@@ -126,7 +126,7 @@ TEST_P(LedDriver, out_of_bounds_turn_off_does_no_harm)
         .Times(1)
         .InSequence(sequence_);
 
-    LedDriver_TurnOn(n);
+    LedDriver_TurnOff(n);
 
     ASSERT_THAT(virtualLeds_, Eq(0xffffu));
 }
