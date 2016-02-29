@@ -1,9 +1,9 @@
 /***
  * Excerpted from "Test-Driven Development for Embedded C",
  * published by The Pragmatic Bookshelf.
- * Copyrights apply to this code. It may not be used to create training material, 
+ * Copyrights apply to this code. It may not be used to create training material,
  * courses, books, articles, and the like. Contact us if you are in doubt.
- * We make no guarantees that this code is fit for any purpose. 
+ * We make no guarantees that this code is fit for any purpose.
  * Visit http://www.pragmaticprogrammer.com/titles/jgade for more book information.
 ***/
 /*- ------------------------------------------------------------------ -*/
@@ -71,7 +71,7 @@ void LightScheduler_Destroy(void)
 
 static void resetRandomize(ScheduledLightEvent * e);
 
-#if 1 
+#if 1
 static void setEventSchedule(ScheduledLightEvent * event,
         int id, Day day, long int minute, int control, int randomize)
 {
@@ -82,14 +82,14 @@ static void setEventSchedule(ScheduledLightEvent * event,
         event->randomize = randomize;
         resetRandomize(event);
 }
-#endif 
+#endif
 
 static BOOL isInUse(ScheduledLightEvent * event)
 {
     return event->id != UNUSED;
 }
 
-#if 1 
+#if 1
 static ScheduledLightEvent * findUnusedEvent(void)
 {
     int i;
@@ -102,9 +102,9 @@ static ScheduledLightEvent * findUnusedEvent(void)
     }
     return NULL;
 }
-#endif 
+#endif
 
-#if 0 
+#if 0
 static ScheduledLightEvent * findUnusedEvent(void)
 {
     int i;
@@ -120,9 +120,9 @@ static ScheduledLightEvent * findUnusedEvent(void)
     }
     return NULL;
 }
-#endif 
+#endif
 
-#if 1 
+#if 1
 static void scheduleEvent(int id, Day day, long int minute, int control,
         int randomize)
 {
@@ -132,9 +132,9 @@ static void scheduleEvent(int id, Day day, long int minute, int control,
     if (event)
         setEventSchedule(event, id, day, minute, control, randomize);
 }
-#endif 
+#endif
 
-#if 0 
+#if 0
 static void scheduleEvent(int id, Day day, long int minuteOfDay, int control,
         int randomize)
 {
@@ -152,7 +152,7 @@ static void scheduleEvent(int id, Day day, long int minuteOfDay, int control,
 
     }
 }
-#endif 
+#endif
 
 
 void LightScheduler_ScheduleTurnOn(int id, Day day, long int minute)
@@ -213,7 +213,7 @@ static void resetRandomize(ScheduledLightEvent * event)
         event->randomMinutes = 0;
 }
 
-#if 0 
+#if 0
 static void scheduleEvent(int id, Day day, long int minuteOfDay, int control,
         int randomize)
 {
@@ -239,9 +239,9 @@ static void scheduleEvent(int id, Day day, long int minuteOfDay, int control,
         resetRandomize(event);
     }
 }
-#endif 
+#endif
 
-#if 0 
+#if 0
 static void scheduleEvent(int id, Day day, long int minuteOfDay, int control,
         int randomize)
 {
@@ -263,9 +263,9 @@ static void scheduleEvent(int id, Day day, long int minuteOfDay, int control,
         }
     }
 }
-#endif 
+#endif
 
-#if 0 
+#if 0
 static void scheduleEvent(int id, Day day, long int minuteOfDay, int control,
         int randomize)
 {
@@ -285,16 +285,16 @@ static void scheduleEvent(int id, Day day, long int minuteOfDay, int control,
         }
     }
 }
-#endif 
+#endif
 
-#if 0 
+#if 0
 BOOL Time_MatchesMinuteOfDay(Time * time, int minuteOfDay)
 {
      return time->minuteOfDay == minuteOfDay;
 }
-#endif 
+#endif
 
-#if 0 
+#if 0
 BOOL Time_MatchesDayOfWeek(Time * time, Day day)
 {
     int today = time->dayOfWeek;
@@ -309,9 +309,9 @@ BOOL Time_MatchesDayOfWeek(Time * time, Day day)
         return TRUE;
     return FALSE;
 }
-#endif 
+#endif
 
-#if 0 
+#if 0
 static BOOL daysMatch(Day today, Day scheduledDay)
 {
     if (scheduledDay == EVERYDAY)
@@ -324,9 +324,9 @@ static BOOL daysMatch(Day today, Day scheduledDay)
         return TRUE;
     return FALSE;
 }
-#endif 
+#endif
 
-#if 0 
+#if 0
 static BOOL daysMatch(Day scheduledDay, Day today)
 {
     if (scheduledDay == EVERYDAY)
@@ -339,9 +339,9 @@ static BOOL daysMatch(Day scheduledDay, Day today)
         return TRUE;
     return FALSE;
 }
-#endif 
+#endif
 
-#if 0 
+#if 0
 static BOOL daysMatch(Day scheduledDay, Day today)
 {
     if ((day == EVERYDAY) || (day == today)
@@ -352,9 +352,9 @@ static BOOL daysMatch(Day scheduledDay, Day today)
         return TRUE;
     return FALSE;
 }
-#endif 
+#endif
 
-#if 0 
+#if 0
 static BOOL isEventDueNow(Time * time, ScheduledLightEvent * event)
 {
     int minuteOfDay = time->minuteOfDay;
@@ -368,9 +368,9 @@ static BOOL isEventDueNow(Time * time, ScheduledLightEvent * event)
 
     return TRUE;
 }
-#endif 
+#endif
 
-#if 0 
+#if 0
 static BOOL isEventDueNow(Time * time, ScheduledLightEvent * event)
 {
     int minuteOfDay = time->minuteOfDay;
@@ -384,9 +384,9 @@ static BOOL isEventDueNow(Time * time, ScheduledLightEvent * event)
 
     return TRUE;
 }
-#endif 
+#endif
 
-#if 0 
+#if 0
 static BOOL isEventDueNow(Time * time, ScheduledLightEvent * event)
 {
     Day today = time->dayOfWeek;
@@ -409,9 +409,9 @@ static BOOL isEventDueNow(Time * time, ScheduledLightEvent * event)
 #endif
     return FALSE;
 }
-#endif 
+#endif
 
-#if 0 
+#if 0
 static BOOL isEventDueNow(Time * time, ScheduledLightEvent * event)
 {
     Day today = time->dayOfWeek;
@@ -430,9 +430,9 @@ static BOOL isEventDueNow(Time * time, ScheduledLightEvent * event)
 
     return FALSE;
 }
-#endif 
+#endif
 
-#if 0 
+#if 0
 static BOOL isEventDueNow(Time * time, ScheduledLightEvent * event)
 {
     Day today = time->dayOfWeek;
@@ -448,9 +448,9 @@ static BOOL isEventDueNow(Time * time, ScheduledLightEvent * event)
     }
     return FALSE;
 }
-#endif 
+#endif
 
-#if 1 
+#if 1
 static BOOL isEventDueNow(Time * time, ScheduledLightEvent * event)
 {
     int todaysMinute = event->minuteOfDay + event->randomMinutes;
@@ -464,9 +464,9 @@ static BOOL isEventDueNow(Time * time, ScheduledLightEvent * event)
 
     return TRUE;
 }
-#endif 
+#endif
 
-#if 1 
+#if 1
 static void processEventsDueNow(Time * time, ScheduledLightEvent * event)
 {
     if (isInUse(event))
@@ -478,9 +478,9 @@ static void processEventsDueNow(Time * time, ScheduledLightEvent * event)
         }
     }
 }
-#endif  
+#endif
 
-#if 1 
+#if 1
 void LightScheduler_WakeUp(void)
 {
     int i;
@@ -493,10 +493,10 @@ void LightScheduler_WakeUp(void)
         processEventsDueNow(&time, &eventList[i]);
     }
 }
-#endif 
+#endif
 
 
-#if 0 
+#if 0
 static void processEventsDueNow(Time * time, ScheduledLightEvent * event)
 {
     if (event->id != UNUSED)
@@ -508,9 +508,9 @@ static void processEventsDueNow(Time * time, ScheduledLightEvent * event)
         }
     }
 }
-#endif  
+#endif
 
-#if 0 
+#if 0
 static void processEventsDueNow(Time * time, ScheduledLightEvent * event)
 {
     Day today = time->dayOfWeek;
@@ -538,7 +538,7 @@ static void processEventsDueNow(Time * time, ScheduledLightEvent * event)
         }
     }
 }
-#endif  
+#endif
 
 #if 0
 static void processEventsDueNow(Time * time, ScheduledLightEvent * event)
@@ -576,7 +576,7 @@ static void processEventsDueNow(Time * time, ScheduledLightEvent * event)
 
 
 
-#if 0 
+#if 0
 static void processEventsDueNow(Time * time, ScheduledLightEvent * event)
 {
     Day today = time->dayOfWeek;
@@ -608,9 +608,9 @@ static void processEventsDueNow(Time * time, ScheduledLightEvent * event)
         }
     }
 }
-#endif 
+#endif
 
-#if 0 
+#if 0
 static void processEventsDueNow(Time * time, ScheduledLightEvent * event)
 {
     Day today = time->dayOfWeek;
@@ -640,9 +640,9 @@ static void processEventsDueNow(Time * time, ScheduledLightEvent * event)
         }
     }
 }
-#endif 
+#endif
 
-#if 0 
+#if 0
 void LightScheduler_WakeUp(void)
 {
     int i;
@@ -681,5 +681,5 @@ void LightScheduler_WakeUp(void)
         }
     }
 }
-#endif 
+#endif
 

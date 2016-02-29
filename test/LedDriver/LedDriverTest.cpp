@@ -31,7 +31,7 @@ using ::testing::ByRef;
 using ::testing::Sequence;
 
 
-namespace LedDriver {
+namespace LedDriverTest {
 
 class LedDriver : public ::testing::TestWithParam<int> {
 protected:
