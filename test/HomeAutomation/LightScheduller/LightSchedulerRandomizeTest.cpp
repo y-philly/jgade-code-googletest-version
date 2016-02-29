@@ -1,19 +1,19 @@
 //- ------------------------------------------------------------------
-//-    Copyright (c) James W. Grenning -- All Rights Reserved         
-//-    For use by owners of Test-Driven Development for Embedded C,   
-//-    and attendees of Renaissance Software Consulting, Co. training 
-//-    classes.                                                       
-//-                                                                   
-//-    Available at http://pragprog.com/titles/jgade/                 
-//-        ISBN 1-934356-62-X, ISBN13 978-1-934356-62-3               
-//-                                                                   
-//-    Authorized users may use this source code in your own          
-//-    projects, however the source code may not be used to           
-//-    create training material, courses, books, articles, and        
-//-    the like. We make no guarantees that this source code is       
-//-    fit for any purpose.                                           
-//-                                                                   
-//-    www.renaissancesoftware.net james@renaissancesoftware.net      
+//-    Copyright (c) James W. Grenning -- All Rights Reserved
+//-    For use by owners of Test-Driven Development for Embedded C,
+//-    and attendees of Renaissance Software Consulting, Co. training
+//-    classes.
+//-
+//-    Available at http://pragprog.com/titles/jgade/
+//-        ISBN 1-934356-62-X, ISBN13 978-1-934356-62-3
+//-
+//-    Authorized users may use this source code in your own
+//-    projects, however the source code may not be used to
+//-    create training material, courses, books, articles, and
+//-    the like. We make no guarantees that this source code is
+//-    fit for any purpose.
+//-
+//-    www.renaissancesoftware.net james@renaissancesoftware.net
 //- ------------------------------------------------------------------
 
 
@@ -38,17 +38,17 @@ TEST_GROUP(LightSchedulerRandomize)
     void setup()
     {
         LightDriverSpy_Reset();
-		LightController_Create();
-		LightDriverSpy_AddSpiesToController();
-		LightScheduler_Create();
+        LightController_Create();
+        LightDriverSpy_AddSpiesToController();
+        LightScheduler_Create();
 
-		scheduledMinute = 1234;
-		checkLightState(LIGHT_ID_UNKNOWN, LIGHT_STATE_UNKNOWN);
-		lightNumber = 4;
+        scheduledMinute = 1234;
+        checkLightState(LIGHT_ID_UNKNOWN, LIGHT_STATE_UNKNOWN);
+        lightNumber = 4;
 
-		UT_PTR_SET(RandomMinute_Get, FakeRandomMinute_Get);
-		FakeRandomMinute_Reset();
-		firstRandomMinute = 5;
+        UT_PTR_SET(RandomMinute_Get, FakeRandomMinute_Get);
+        FakeRandomMinute_Reset();
+        firstRandomMinute = 5;
     }
 
     void teardown()
