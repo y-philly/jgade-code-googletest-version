@@ -23,10 +23,13 @@
 /*-                                                                    -*/
 /*-    www.renaissancesoftware.net james@renaissancesoftware.net       -*/
 /*- ------------------------------------------------------------------ -*/
+/*- ------------------------------------------------------------------ -*/
+/*-    Modifed by Yasuhiro SHIMIZU                                     -*/
+/*- ------------------------------------------------------------------ -*/
 
-#include "RandomMinute.h"
 #include <stdlib.h>
 #include <string.h>
+#include "HomeAutomation/RandomMinute.h"
 
 static int bound = 0;
 
