@@ -15,7 +15,15 @@
 //-
 //-    www.renaissancesoftware.net james@renaissancesoftware.net
 //- ------------------------------------------------------------------
+//- ------------------------------------------------------------------
+//-    Yasuhiro SHIMIZU ported this code to GoogleTest.
+//- ------------------------------------------------------------------
 
+
+namespace LightSchedulerTest {
+
+
+#if 0
 #include "CppUTest/TestHarness.h"
 
 extern "C"
@@ -218,3 +226,7 @@ TEST(LightScheduler, MultipleScheduledEventsDifferentTimes)
 
     checkLightState(3, LIGHT_ON);
 }
+#endif
+
+
+} // namespace LightSchedulerTest

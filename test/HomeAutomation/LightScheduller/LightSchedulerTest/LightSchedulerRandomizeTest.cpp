@@ -15,8 +15,15 @@
 //-
 //-    www.renaissancesoftware.net james@renaissancesoftware.net
 //- ------------------------------------------------------------------
+//- ------------------------------------------------------------------
+//-    Yasuhiro SHIMIZU ported this code to GoogleTest.
+//- ------------------------------------------------------------------
 
 
+namespace LightSchedulerTest {
+
+
+#if 0
 extern "C"
 {
 #include "LightScheduler.h"
@@ -150,3 +157,7 @@ TEST(LightSchedulerRandomize, EnableRandomizeEarlyOnlyOneEventFires)
     checkLightState(LIGHT_ID_UNKNOWN, LIGHT_STATE_UNKNOWN);
 }
 #endif
+#endif
+
+
+} // namespace LightSchedulerTest
