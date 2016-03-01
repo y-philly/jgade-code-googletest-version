@@ -1,9 +1,9 @@
 /***
  * Excerpted from "Test-Driven Development for Embedded C",
  * published by The Pragmatic Bookshelf.
- * Copyrights apply to this code. It may not be used to create training material,
+ * Copyrights apply to this code. It may not be used to create training material, 
  * courses, books, articles, and the like. Contact us if you are in doubt.
- * We make no guarantees that this code is fit for any purpose.
+ * We make no guarantees that this code is fit for any purpose. 
  * Visit http://www.pragmaticprogrammer.com/titles/jgade for more book information.
 ***/
 /*- ------------------------------------------------------------------ -*/
@@ -23,22 +23,56 @@
 /*-                                                                    -*/
 /*-    www.renaissancesoftware.net james@renaissancesoftware.net       -*/
 /*- ------------------------------------------------------------------ -*/
-/*- ------------------------------------------------------------------ -*/
-/*-    Modifed by Yasuhiro SHIMIZU                                     -*/
-/*- ------------------------------------------------------------------ -*/
 
+#include "AcmeWirelessLightDriver.h"
+#include "LightDriverPrivate.h"
 #include <stdlib.h>
-#include <string.h>
-#include "HomeAutomation/RandomMinute.h"
+#include <memory.h>
+#include "common.h"
 
-static int bound = 0;
-
-void RandomMinute_Create(int b)
+typedef struct AcmeWirelessLightDriverStruct
 {
-    bound = b;
+    LightDriverStruct base;
+    const char * ssid;
+    const char * key;
+    int channel;
+} AcmeWirelessLightDriverStruct;
+
+static void destroy(LightDriver super)
+{
+    AcmeWirelessLightDriver self = (AcmeWirelessLightDriver)super;
+    free(self);
 }
 
-int RandomMinute_Get(void)
+static void turnOn(LightDriver super)
 {
-    return bound - rand() % (bound * 2 + 1);
+    AcmeWirelessLightDriver self = (AcmeWirelessLightDriver)super;
+    explodesInTestEnvironment(self);
 }
+
+static void turnOff(LightDriver super)
+{
+    AcmeWirelessLightDriver self = (AcmeWirelessLightDriver)super;
+    explodesInTestEnvironment(self);
+}
+
+static LightDriverInterfaceStruct interface =
+{
+    turnOn,
+    turnOff,
+    destroy
+};
+
+LightDriver AcmeWirelessLightDriver_Create(int id, const char * ssid, const char * key, int channel)
+{
+     AcmeWirelessLightDriver self = calloc(1, sizeof(AcmeWirelessLightDriverStruct));
+     self->base.vtable = &interface;
+     self->base.type = "Acme wireless";
+     self->base.id = id;
+     self->ssid = ssid;
+     self->key = key;
+     self->channel = channel;
+     return (LightDriver)self;
+}
+
+
