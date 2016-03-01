@@ -20,7 +20,6 @@
 //- ------------------------------------------------------------------
 
 #include "Device/MockLightDriver.h"
-
 #include "HomeAutomation/LightController.h"
 
 
