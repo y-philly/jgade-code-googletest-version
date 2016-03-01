@@ -77,6 +77,7 @@ endif
 
 CFLAGS = $(compile_flags) -std=c99
 CXXFLAGS = $(compile_flags) -std=gnu++1y
+CPPFLAGS += -DPATH_MAX=256
 
 # Cygwin環境ではGTEST_HAS_PTHREADが自動で1にならないので、明示的に指定する.
 CPPFLAGS += $(include) \
