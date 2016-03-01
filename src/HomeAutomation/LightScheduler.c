@@ -23,13 +23,16 @@
 /*-                                                                    -*/
 /*-    www.renaissancesoftware.net james@renaissancesoftware.net       -*/
 /*- ------------------------------------------------------------------ -*/
+/*- ------------------------------------------------------------------ -*/
+/*-    Modifed by Yasuhiro SHIMIZU                                     -*/
+/*- ------------------------------------------------------------------ -*/
 
-#include "LightScheduler.h"
-#include "LightController.h"
-#include "TimeService.h"
-#include "RandomMinute.h"
 #include <stdlib.h>
 #include <string.h>
+#include "HomeAutomation/LightScheduler.h"
+#include "HomeAutomation/LightController.h"
+#include "util/TimeService.h"
+#include "HomeAutomation/RandomMinute.h"
 
 enum
 {
@@ -84,7 +87,7 @@ static void setEventSchedule(ScheduledLightEvent * event,
 }
 #endif
 
-static BOOL isInUse(ScheduledLightEvent * event)
+static bool isInUse(ScheduledLightEvent * event)
 {
     return event->id != UNUSED;
 }
@@ -165,7 +168,7 @@ void LightScheduler_ScheduleTurnOff(int id, int day, long int minute)
     scheduleEvent(id, day, minute, TURN_OFF, RANDOM_OFF);
 }
 
-static BOOL matchEvent(ScheduledLightEvent * e, int id, Day day, long int minute)
+static bool matchEvent(ScheduledLightEvent * e, int id, Day day, long int minute)
 {
     return e->id == id && e->day == day && e->minuteOfDay == minute;
 }
@@ -288,152 +291,152 @@ static void scheduleEvent(int id, Day day, long int minuteOfDay, int control,
 #endif
 
 #if 0
-BOOL Time_MatchesMinuteOfDay(Time * time, int minuteOfDay)
+bool Time_MatchesMinuteOfDay(Time * time, int minuteOfDay)
 {
      return time->minuteOfDay == minuteOfDay;
 }
 #endif
 
 #if 0
-BOOL Time_MatchesDayOfWeek(Time * time, Day day)
+bool Time_MatchesDayOfWeek(Time * time, Day day)
 {
     int today = time->dayOfWeek;
 
     if (day == EVERYDAY)
-        return TRUE;
+        return true;
     if (day == today)
-        return TRUE;
+        return true;
     if (day == WEEKEND && (today == SATURDAY || today == SUNDAY))
-        return TRUE;
+        return true;
     if (day == WEEKDAY && today >= MONDAY && today <= FRIDAY)
-        return TRUE;
-    return FALSE;
+        return true;
+    return false;
 }
 #endif
 
 #if 0
-static BOOL daysMatch(Day today, Day scheduledDay)
+static bool daysMatch(Day today, Day scheduledDay)
 {
     if (scheduledDay == EVERYDAY)
-        return TRUE;
+        return true;
     if (scheduledDay == today)
-        return TRUE;
+        return true;
     if (scheduledDay == WEEKEND && (today == SATURDAY || today == SUNDAY))
-        return TRUE;
+        return true;
     if (scheduledDay == WEEKDAY && (today >= MONDAY && today <= FRIDAY))
-        return TRUE;
-    return FALSE;
+        return true;
+    return false;
 }
 #endif
 
 #if 0
-static BOOL daysMatch(Day scheduledDay, Day today)
+static bool daysMatch(Day scheduledDay, Day today)
 {
     if (scheduledDay == EVERYDAY)
-        return TRUE;
+        return true;
     if (scheduledDay == today)
-        return TRUE;
+        return true;
     if (scheduledDay == WEEKEND && (today == SATURDAY || today == SUNDAY))
-        return TRUE;
+        return true;
     if (scheduledDay == WEEKDAY && (today >= MONDAY && today <= FRIDAY))
-        return TRUE;
-    return FALSE;
+        return true;
+    return false;
 }
 #endif
 
 #if 0
-static BOOL daysMatch(Day scheduledDay, Day today)
+static bool daysMatch(Day scheduledDay, Day today)
 {
     if ((day == EVERYDAY) || (day == today)
              || (day == WEEKEND &&
                 (today == SATURDAY || today == SUNDAY))
              || (day == WEEKDAY && (today >= MONDAY
              && today <= FRIDAY)))
-        return TRUE;
-    return FALSE;
+        return true;
+    return false;
 }
 #endif
 
 #if 0
-static BOOL isEventDueNow(Time * time, ScheduledLightEvent * event)
+static bool isEventDueNow(Time * time, ScheduledLightEvent * event)
 {
     int minuteOfDay = time->minuteOfDay;
     Day day = event->day;
 
     if (minuteOfDay != event->minuteOfDay + event->randomMinutes)
-        return FALSE;
+        return false;
 
     if (!Time_MatchesDayOfWeek(time, day))
-        return FALSE;
+        return false;
 
-    return TRUE;
+    return true;
 }
 #endif
 
 #if 0
-static BOOL isEventDueNow(Time * time, ScheduledLightEvent * event)
+static bool isEventDueNow(Time * time, ScheduledLightEvent * event)
 {
     int minuteOfDay = time->minuteOfDay;
     Day day = event->day;
 
     if (minuteOfDay != event->minuteOfDay + event->randomMinutes)
-        return FALSE;
+        return false;
 
     if (!daysMatch(time, day))
-        return FALSE;
+        return false;
 
-    return TRUE;
+    return true;
 }
 #endif
 
 #if 0
-static BOOL isEventDueNow(Time * time, ScheduledLightEvent * event)
+static bool isEventDueNow(Time * time, ScheduledLightEvent * event)
 {
     Day today = time->dayOfWeek;
     int minuteOfDay = time->minuteOfDay;
     Day day = event->day;
 
     if (minuteOfDay != event->minuteOfDay + event->randomMinutes)
-        return FALSE;
+        return false;
 
 #if 1
     if (daysMatch(today, day))
-        return TRUE;
+        return true;
 #else
     if ( (day == EVERYDAY) || (day == today)
              || (day == WEEKEND &&
              (today == SATURDAY || today == SUNDAY))
              || (day == WEEKDAY && (today >= MONDAY
              && today <= FRIDAY)))
-        return TRUE;
+        return true;
 #endif
-    return FALSE;
+    return false;
 }
 #endif
 
 #if 0
-static BOOL isEventDueNow(Time * time, ScheduledLightEvent * event)
+static bool isEventDueNow(Time * time, ScheduledLightEvent * event)
 {
     Day today = time->dayOfWeek;
     int minuteOfDay = time->minuteOfDay;
     Day day = event->day;
 
     if (minuteOfDay != event->minuteOfDay + event->randomMinutes)
-        return FALSE;
+        return false;
 
     if ( (day == EVERYDAY) || (day == today)
             || (day == WEEKEND &&
                (today == SATURDAY || today == SUNDAY))
             || (day == WEEKDAY && (today >= MONDAY
             && today <= FRIDAY)))
-        return TRUE;
+        return true;
 
-    return FALSE;
+    return false;
 }
 #endif
 
 #if 0
-static BOOL isEventDueNow(Time * time, ScheduledLightEvent * event)
+static bool isEventDueNow(Time * time, ScheduledLightEvent * event)
 {
     Day today = time->dayOfWeek;
     int minuteOfDay = time->minuteOfDay;
@@ -444,25 +447,25 @@ static BOOL isEventDueNow(Time * time, ScheduledLightEvent * event)
                         && today <= FRIDAY)))
     {
         if (minuteOfDay == event->minuteOfDay + event->randomMinutes)
-            return TRUE;
+            return true;
     }
-    return FALSE;
+    return false;
 }
 #endif
 
 #if 1
-static BOOL isEventDueNow(Time * time, ScheduledLightEvent * event)
+static bool isEventDueNow(Time * time, ScheduledLightEvent * event)
 {
-    int todaysMinute = event->minuteOfDay + event->randomMinutes;
+    int todaysMinute = (int)(event->minuteOfDay + event->randomMinutes);
     Day day = event->day;
 
     if (!Time_MatchesMinuteOfDay(time, todaysMinute))
-        return FALSE;
+        return false;
 
     if (!Time_MatchesDayOfWeek(time, day))
-        return FALSE;
+        return false;
 
-    return TRUE;
+    return true;
 }
 #endif
 
