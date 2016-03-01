@@ -10,7 +10,8 @@ SRC := HomeAutomation/LightScheduler.c \
 #
 # カレントディレクトリからの相対パスでテストコードを列挙する.
 #
-TEST_CODE := LightSchedulerTest.cpp
+TEST_CODE := LightSchedulerTest.cpp \
+             LightSchedulerRandomizeTest.cpp
 
 #
 # mockディレクトリからの相対パスでモックコードを列挙する.

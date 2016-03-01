@@ -16,131 +16,172 @@
 //-    www.renaissancesoftware.net james@renaissancesoftware.net
 //- ------------------------------------------------------------------
 //- ------------------------------------------------------------------
-//-    Yasuhiro SHIMIZU ported this code to GoogleTest.
+//-    Ported to GoogleTest by Yasuhiro SHIMIZU .
 //- ------------------------------------------------------------------
 
+#include "HomeAutomation/MockRandomMinute.h"
+#include "LightSchedulerTest.h"
 
+
+namespace HomeAutomation {
 namespace LightSchedulerTest {
 
-
-#if 0
-extern "C"
-{
-#include "LightScheduler.h"
-#include "LightController.h"
-#include "LightDriverSpy.h"
-#include "FakeTimeService.h"
-#include "FakeRandomMinute.h"
-}
-#include "CppUTest/TestHarness.h"
-
-TEST_GROUP(LightSchedulerRandomize)
-{
-    int scheduledMinute;
-    int expectedId;
-    int expectedLevel;
-    int lightNumber;
-    int firstRandomMinute;
-
-    void setup()
+class LightSchedulerRandomize : public LightScheduler {
+protected:
+    virtual void SetUp()
     {
-        LightDriverSpy_Reset();
-        LightController_Create();
-        LightDriverSpy_AddSpiesToController();
-        LightScheduler_Create();
-
-        scheduledMinute = 1234;
-        checkLightState(LIGHT_ID_UNKNOWN, LIGHT_STATE_UNKNOWN);
-        lightNumber = 4;
-
-        UT_PTR_SET(RandomMinute_Get, FakeRandomMinute_Get);
-        FakeRandomMinute_Reset();
-        firstRandomMinute = 5;
+        LightScheduler::SetUp();
+        gMockRandomMinutePtr = &mockRandomMinute_;
     }
 
-    void teardown()
-    {
-        LightScheduler_Destroy();
-        LightController_Destroy();
-    }
+    static constexpr int kFirstRandomMinute_ = 5;
 
-    //START: helpers
-    void setTimeTo(int day, int minute)
-    {
-        FakeTimeService_SetDay(day);
-        FakeTimeService_SetMinute(minute);
-    }
-
-    void checkLightState(int id, int level)
-    {
-        if (id == LIGHT_ID_UNKNOWN)
-            LONGS_EQUAL(LIGHT_STATE_UNKNOWN, LightDriverSpy_GetLastState())
-        else
-            LONGS_EQUAL(level, LightDriverSpy_GetState(id))
-    }
-    //END: helpers
-
+    MockRandomMinute mockRandomMinute_;
 };
 
 
-//START: EnableRandomize
-TEST(LightSchedulerRandomize, TurnsOnEarly)
+TEST_F(LightSchedulerRandomize, turns_on_early)
 {
-    FakeRandomMinute_SetFirstAndIncrement(-10, 5);
     LightScheduler_ScheduleTurnOn(4, EVERYDAY, 600);
+
+    EXPECT_CALL(mockRandomMinute_, Get())
+            .Times(1)
+            .WillOnce(Return(-10));
+
     LightScheduler_Randomize(4, EVERYDAY, 600);
 
-    FakeTimeService_SetMinute(600-10);
+    SetTimeTo(MONDAY, (600 - 10));
+
+    EXPECT_CALL(mockTimeService_, MatchesMinuteOfDay(NotNull(), (600 - 10)))
+            .Times(1)
+            .WillOnce(Return(true));
+
+    EXPECT_CALL(mockTimeService_, MatchesDayOfWeek(NotNull(), EVERYDAY))
+            .Times(1)
+            .WillOnce(Return(true));
+
+    CheckLightState(4, LightState::kOn);
+
+    EXPECT_CALL(mockRandomMinute_, Get())
+            .Times(1)
+            .WillOnce(Return(0));
 
     LightScheduler_WakeUp();
-
-	checkLightState(4, LIGHT_ON);
-}
-//END: EnableRandomize
-
-TEST(LightSchedulerRandomize, EnableRandomize)
-{
-	FakeRandomMinute_SetFirstAndIncrement(firstRandomMinute, 1);
-    LightScheduler_ScheduleTurnOn(lightNumber, EVERYDAY, scheduledMinute);
-    LightScheduler_Randomize(lightNumber, EVERYDAY, scheduledMinute);
-
-    setTimeTo(MONDAY, scheduledMinute + firstRandomMinute);
-    LightScheduler_WakeUp();
-    checkLightState(lightNumber, LIGHT_ON);
-}
-
-TEST(LightSchedulerRandomize, DifferentRandmomFactorTheSecondDay)
-{
-	FakeRandomMinute_SetFirstAndIncrement(firstRandomMinute, 1);
-
-    LightScheduler_ScheduleTurnOn(lightNumber, EVERYDAY, scheduledMinute);
-    LightScheduler_Randomize(lightNumber, EVERYDAY, scheduledMinute);
-
-    setTimeTo(MONDAY, scheduledMinute + firstRandomMinute);
-    LightScheduler_WakeUp();
-    checkLightState(lightNumber, LIGHT_ON);
 }
 
-TEST(LightSchedulerRandomize, MultipleRandomControls)
+
+TEST_F(LightSchedulerRandomize, enable_randomize)
 {
-	FakeRandomMinute_SetFirstAndIncrement(firstRandomMinute, 5);
+    LightScheduler_ScheduleTurnOn(kLightNumber_, EVERYDAY, kScheduledMinute_);
 
-    LightScheduler_ScheduleTurnOn(lightNumber, EVERYDAY, scheduledMinute);
-    LightScheduler_Randomize(lightNumber, EVERYDAY, scheduledMinute);
-    LightScheduler_ScheduleTurnOn(lightNumber+1, EVERYDAY, scheduledMinute+3);
-    LightScheduler_Randomize(lightNumber+1, EVERYDAY, scheduledMinute+3);
+    EXPECT_CALL(mockRandomMinute_, Get())
+            .Times(1)
+            .WillOnce(Return(kFirstRandomMinute_));
 
-    setTimeTo(MONDAY, scheduledMinute + firstRandomMinute);
+    LightScheduler_Randomize(kLightNumber_, EVERYDAY, kScheduledMinute_);
+
+    SetTimeTo(MONDAY, kScheduledMinute_ + kFirstRandomMinute_);
+
+    EXPECT_CALL(mockTimeService_, MatchesMinuteOfDay(NotNull(), (kScheduledMinute_ + kFirstRandomMinute_)))
+            .Times(1)
+            .WillOnce(Return(true));
+
+    EXPECT_CALL(mockTimeService_, MatchesDayOfWeek(NotNull(), EVERYDAY))
+            .Times(1)
+            .WillOnce(Return(true));
+
+    EXPECT_CALL(mockRandomMinute_, Get())
+            .Times(1)
+            .WillOnce(Return(0));
+
+    CheckLightState(4, LightState::kOn);
+
     LightScheduler_WakeUp();
-    checkLightState(lightNumber, LIGHT_ON);
-    setTimeTo(MONDAY, scheduledMinute +firstRandomMinute + 3 + 5);
+}
+
+TEST_F(LightSchedulerRandomize, different_randmom_factor_the_second_day)
+{
+    LightScheduler_ScheduleTurnOn(kLightNumber_, EVERYDAY, kScheduledMinute_);
+
+    EXPECT_CALL(mockRandomMinute_, Get())
+            .Times(1)
+            .WillOnce(Return(kFirstRandomMinute_));
+
+    EXPECT_CALL(mockTimeService_, MatchesMinuteOfDay(NotNull(), (kScheduledMinute_ + kFirstRandomMinute_)))
+            .Times(1)
+            .WillOnce(Return(true));
+
+    EXPECT_CALL(mockTimeService_, MatchesDayOfWeek(NotNull(), EVERYDAY))
+            .Times(1)
+            .WillOnce(Return(true));
+
+    LightScheduler_Randomize(kLightNumber_, EVERYDAY, kScheduledMinute_);
+
+    SetTimeTo(MONDAY, kScheduledMinute_ + kFirstRandomMinute_);
+
+    EXPECT_CALL(mockRandomMinute_, Get())
+            .Times(1)
+            .WillOnce(Return(0));
+
+    CheckLightState(4, LightState::kOn);
+
     LightScheduler_WakeUp();
-    checkLightState(lightNumber+1, LIGHT_ON);
+}
+
+TEST_F(LightSchedulerRandomize, multiple_random_controls)
+{
+    EXPECT_CALL(mockRandomMinute_, Get())
+            .Times(4)
+            .WillRepeatedly(Return(kFirstRandomMinute_));
+
+    LightScheduler_ScheduleTurnOn(kLightNumber_, EVERYDAY, kScheduledMinute_);
+    LightScheduler_Randomize(kLightNumber_, EVERYDAY, kScheduledMinute_);
+    LightScheduler_ScheduleTurnOn((kLightNumber_ + 1), EVERYDAY, (kScheduledMinute_ + 3));
+    LightScheduler_Randomize((kLightNumber_ + 1), EVERYDAY, (kScheduledMinute_ + 3));
+
+    SetTimeTo(MONDAY, kScheduledMinute_ + kFirstRandomMinute_);
+
+    EXPECT_CALL(mockTimeService_, MatchesMinuteOfDay(NotNull(), (kScheduledMinute_ + kFirstRandomMinute_)))
+            .Times(1)
+            .WillOnce(Return(true));
+    EXPECT_CALL(mockTimeService_, MatchesDayOfWeek(NotNull(), EVERYDAY))
+            .Times(1)
+            .WillOnce(Return(true));
+
+    EXPECT_CALL(mockTimeService_, MatchesMinuteOfDay(
+                                    NotNull(),
+                                    (kScheduledMinute_ + kFirstRandomMinute_ + 3)))
+            .Times(1)
+            .WillOnce(Return(false));
+
+    CheckLightState(kLightNumber_, LightState::kOn);
+
+    LightScheduler_WakeUp();
+
+
+    SetTimeTo(MONDAY, kScheduledMinute_ + kFirstRandomMinute_ + 3);
+
+    EXPECT_CALL(mockTimeService_, MatchesMinuteOfDay(
+                                    NotNull(),
+                                    (kScheduledMinute_ + kFirstRandomMinute_)))
+            .Times(1)
+            .WillOnce(Return(false));
+
+    EXPECT_CALL(mockTimeService_, MatchesMinuteOfDay(NotNull(), (kScheduledMinute_ + kFirstRandomMinute_ + 3)))
+            .Times(1)
+            .WillOnce(Return(true));
+    EXPECT_CALL(mockTimeService_, MatchesDayOfWeek(NotNull(), EVERYDAY))
+            .Times(1)
+            .WillOnce(Return(true));
+
+    CheckLightState((kLightNumber_ + 1), LightState::kOn);
+
+    LightScheduler_WakeUp();
 }
 
 
 #if 0 //To be implemented
-TEST(LightSchedulerRandomize, EnableRandomizeEarlyOnlyOneEventFires)
+TEST_F(LightSchedulerRandomize, EnableRandomizeEarlyOnlyOneEventFires)
 {
     UT_PTR_SET(RandomMinute_Get, FakeRandomMinute_Get);
     FakeRandomMinute_SetFirstAndIncrement(-10, 1);
@@ -157,7 +198,7 @@ TEST(LightSchedulerRandomize, EnableRandomizeEarlyOnlyOneEventFires)
     checkLightState(LIGHT_ID_UNKNOWN, LIGHT_STATE_UNKNOWN);
 }
 #endif
-#endif
 
 
 } // namespace LightSchedulerTest
+} // namespace HomeAutomation
