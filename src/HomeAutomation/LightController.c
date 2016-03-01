@@ -100,9 +100,3 @@ bool LightController_TurnOff(int id)
     LightDriver_TurnOff(lightDrivers[id]);
     return true;
 }
-
-
-
-
-
-

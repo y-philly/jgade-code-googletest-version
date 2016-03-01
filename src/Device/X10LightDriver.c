@@ -1,9 +1,9 @@
 /***
  * Excerpted from "Test-Driven Development for Embedded C",
  * published by The Pragmatic Bookshelf.
- * Copyrights apply to this code. It may not be used to create training material,
+ * Copyrights apply to this code. It may not be used to create training material, 
  * courses, books, articles, and the like. Contact us if you are in doubt.
- * We make no guarantees that this code is fit for any purpose.
+ * We make no guarantees that this code is fit for any purpose. 
  * Visit http://www.pragmaticprogrammer.com/titles/jgade for more book information.
 ***/
 /*- ------------------------------------------------------------------ -*/
@@ -23,22 +23,71 @@
 /*-                                                                    -*/
 /*-    www.renaissancesoftware.net james@renaissancesoftware.net       -*/
 /*- ------------------------------------------------------------------ -*/
-/*- ------------------------------------------------------------------ -*/
-/*-    Modifed by Yasuhiro SHIMIZU                                     -*/
-/*- ------------------------------------------------------------------ -*/
 
+#include "X10LightDriver.h"
+#include "LightDriverPrivate.h"
 #include <stdlib.h>
-#include <string.h>
-#include "HomeAutomation/RandomMinute.h"
+#include <memory.h>
+#include "common.h"
 
-static int bound = 0;
-
-void RandomMinute_Create(int b)
+typedef struct X10LightDriverStruct
 {
-    bound = b;
+    LightDriverStruct base;
+    X10_HouseCode house;
+    int unit;
+} X10LightDriverStruct;
+
+static void formatTurnOnMessage(X10LightDriver self)
+{
+    explodesInTestEnvironment(self);
 }
 
-int RandomMinute_Get(void)
+static void formatTurnOffMessage(X10LightDriver self)
 {
-    return bound - rand() % (bound * 2 + 1);
+    explodesInTestEnvironment(self);
 }
+
+static void sendMessage(X10LightDriver self)
+{
+    explodesInTestEnvironment(self);
+}
+
+static void destroy(LightDriver super)
+{
+    X10LightDriver self = (X10LightDriver)super;
+    free(self);
+}
+
+static void turnOn(LightDriver super)
+{
+    X10LightDriver self = (X10LightDriver)super;
+    formatTurnOnMessage(self);
+    sendMessage(self);
+}
+
+static void turnOff(LightDriver super)
+{
+    X10LightDriver self = (X10LightDriver)super;
+    explodesInTestEnvironment(self);
+    formatTurnOffMessage(self);
+    sendMessage(self);
+}
+
+static LightDriverInterfaceStruct interface =
+{
+    turnOn,
+    turnOff,
+    destroy
+};
+
+LightDriver X10LightDriver_Create(int id, X10_HouseCode house, int unit)
+{
+     X10LightDriver self = calloc(1, sizeof(X10LightDriverStruct));
+     self->base.vtable = &interface;
+     self->base.type = "X10";
+     self->base.id = id;
+     self->house = house;
+     self->unit = unit;
+     return (LightDriver)self;
+}
+
