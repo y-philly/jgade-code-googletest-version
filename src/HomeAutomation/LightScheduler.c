@@ -74,7 +74,6 @@ void LightScheduler_Destroy(void)
 
 static void resetRandomize(ScheduledLightEvent * e);
 
-#if 1
 static void setEventSchedule(ScheduledLightEvent * event,
         int id, Day day, long int minute, int control, int randomize)
 {
@@ -85,14 +84,12 @@ static void setEventSchedule(ScheduledLightEvent * event,
         event->randomize = randomize;
         resetRandomize(event);
 }
-#endif
 
 static bool isInUse(ScheduledLightEvent * event)
 {
     return event->id != UNUSED;
 }
 
-#if 1
 static ScheduledLightEvent * findUnusedEvent(void)
 {
     int i;
@@ -105,27 +102,7 @@ static ScheduledLightEvent * findUnusedEvent(void)
     }
     return NULL;
 }
-#endif
 
-#if 0
-static ScheduledLightEvent * findUnusedEvent(void)
-{
-    int i;
-    ScheduledLightEvent * event = 0;
-
-    for (i = 0; i < MAX_EVENTS; i++)
-    {
-        if (!isInUse(&eventList[i]))
-        {
-            event = &eventList[i];
-            return event;
-        }
-    }
-    return NULL;
-}
-#endif
-
-#if 1
 static void scheduleEvent(int id, Day day, long int minute, int control,
         int randomize)
 {
@@ -135,28 +112,6 @@ static void scheduleEvent(int id, Day day, long int minute, int control,
     if (event)
         setEventSchedule(event, id, day, minute, control, randomize);
 }
-#endif
-
-#if 0
-static void scheduleEvent(int id, Day day, long int minuteOfDay, int control,
-        int randomize)
-{
-
-    ScheduledLightEvent * event = findUnusedEvent(void);
-
-    if (event)
-    {
-         event->id = id;
-         event->day = day;
-         event->minuteOfDay = minuteOfDay;
-         event->event = control;
-         event->randomize = randomize;
-         resetRandomize(event);
-
-    }
-}
-#endif
-
 
 void LightScheduler_ScheduleTurnOn(int id, Day day, long int minute)
 {
@@ -216,244 +171,6 @@ static void resetRandomize(ScheduledLightEvent * event)
         event->randomMinutes = 0;
 }
 
-#if 0
-static void scheduleEvent(int id, Day day, long int minuteOfDay, int control,
-        int randomize)
-{
-    int i;
-    ScheduledLightEvent * event = 0;
-
-    for (i = 0; i < MAX_EVENTS; i++)
-    {
-        if (!isInUse(&eventList[i]))
-       {
-            event = &eventList[i];
-            break;
-        }
-    }
-
-    if (event)
-    {
-        event->id = id;
-        event->day = day;
-        event->minuteOfDay = minuteOfDay;
-        event->event = control;
-        event->randomize = randomize;
-        resetRandomize(event);
-    }
-}
-#endif
-
-#if 0
-static void scheduleEvent(int id, Day day, long int minuteOfDay, int control,
-        int randomize)
-{
-    int i;
-    ScheduledLightEvent * event = 0;
-
-    for (i = 0; i < MAX_EVENTS; i++)
-    {
-        if (!isInUse(&eventList[i]))
-        {
-            event = &eventList[i];
-            event->id = id;
-            event->day = day;
-            event->minuteOfDay = minuteOfDay;
-            event->event = control;
-            event->randomize = randomize;
-            resetRandomize(event);
-            break;
-        }
-    }
-}
-#endif
-
-#if 0
-static void scheduleEvent(int id, Day day, long int minuteOfDay, int control,
-        int randomize)
-{
-    int i;
-
-    for (i = 0; i < MAX_EVENTS; i++)
-    {
-        if (!isInUse(&eventList[i]))
-        {
-            eventList[i].id = id;
-            eventList[i].day = day;
-            eventList[i].minuteOfDay = minuteOfDay;
-            eventList[i].event = control;
-            eventList[i].randomize = randomize;
-            resetRandomize(&eventList[i]);
-            break;
-        }
-    }
-}
-#endif
-
-#if 0
-bool Time_MatchesMinuteOfDay(Time * time, int minuteOfDay)
-{
-     return time->minuteOfDay == minuteOfDay;
-}
-#endif
-
-#if 0
-bool Time_MatchesDayOfWeek(Time * time, Day day)
-{
-    int today = time->dayOfWeek;
-
-    if (day == EVERYDAY)
-        return true;
-    if (day == today)
-        return true;
-    if (day == WEEKEND && (today == SATURDAY || today == SUNDAY))
-        return true;
-    if (day == WEEKDAY && today >= MONDAY && today <= FRIDAY)
-        return true;
-    return false;
-}
-#endif
-
-#if 0
-static bool daysMatch(Day today, Day scheduledDay)
-{
-    if (scheduledDay == EVERYDAY)
-        return true;
-    if (scheduledDay == today)
-        return true;
-    if (scheduledDay == WEEKEND && (today == SATURDAY || today == SUNDAY))
-        return true;
-    if (scheduledDay == WEEKDAY && (today >= MONDAY && today <= FRIDAY))
-        return true;
-    return false;
-}
-#endif
-
-#if 0
-static bool daysMatch(Day scheduledDay, Day today)
-{
-    if (scheduledDay == EVERYDAY)
-        return true;
-    if (scheduledDay == today)
-        return true;
-    if (scheduledDay == WEEKEND && (today == SATURDAY || today == SUNDAY))
-        return true;
-    if (scheduledDay == WEEKDAY && (today >= MONDAY && today <= FRIDAY))
-        return true;
-    return false;
-}
-#endif
-
-#if 0
-static bool daysMatch(Day scheduledDay, Day today)
-{
-    if ((day == EVERYDAY) || (day == today)
-             || (day == WEEKEND &&
-                (today == SATURDAY || today == SUNDAY))
-             || (day == WEEKDAY && (today >= MONDAY
-             && today <= FRIDAY)))
-        return true;
-    return false;
-}
-#endif
-
-#if 0
-static bool isEventDueNow(Time * time, ScheduledLightEvent * event)
-{
-    int minuteOfDay = time->minuteOfDay;
-    Day day = event->day;
-
-    if (minuteOfDay != event->minuteOfDay + event->randomMinutes)
-        return false;
-
-    if (!Time_MatchesDayOfWeek(time, day))
-        return false;
-
-    return true;
-}
-#endif
-
-#if 0
-static bool isEventDueNow(Time * time, ScheduledLightEvent * event)
-{
-    int minuteOfDay = time->minuteOfDay;
-    Day day = event->day;
-
-    if (minuteOfDay != event->minuteOfDay + event->randomMinutes)
-        return false;
-
-    if (!daysMatch(time, day))
-        return false;
-
-    return true;
-}
-#endif
-
-#if 0
-static bool isEventDueNow(Time * time, ScheduledLightEvent * event)
-{
-    Day today = time->dayOfWeek;
-    int minuteOfDay = time->minuteOfDay;
-    Day day = event->day;
-
-    if (minuteOfDay != event->minuteOfDay + event->randomMinutes)
-        return false;
-
-#if 1
-    if (daysMatch(today, day))
-        return true;
-#else
-    if ( (day == EVERYDAY) || (day == today)
-             || (day == WEEKEND &&
-             (today == SATURDAY || today == SUNDAY))
-             || (day == WEEKDAY && (today >= MONDAY
-             && today <= FRIDAY)))
-        return true;
-#endif
-    return false;
-}
-#endif
-
-#if 0
-static bool isEventDueNow(Time * time, ScheduledLightEvent * event)
-{
-    Day today = time->dayOfWeek;
-    int minuteOfDay = time->minuteOfDay;
-    Day day = event->day;
-
-    if (minuteOfDay != event->minuteOfDay + event->randomMinutes)
-        return false;
-
-    if ( (day == EVERYDAY) || (day == today)
-            || (day == WEEKEND &&
-               (today == SATURDAY || today == SUNDAY))
-            || (day == WEEKDAY && (today >= MONDAY
-            && today <= FRIDAY)))
-        return true;
-
-    return false;
-}
-#endif
-
-#if 0
-static bool isEventDueNow(Time * time, ScheduledLightEvent * event)
-{
-    Day today = time->dayOfWeek;
-    int minuteOfDay = time->minuteOfDay;
-    Day day = event->day;
-    if ( (day == EVERYDAY) || (day == today) || (day == WEEKEND &&
-        (today == SATURDAY || today == SUNDAY)) ||
-        (day == WEEKDAY && (today >= MONDAY
-                        && today <= FRIDAY)))
-    {
-        if (minuteOfDay == event->minuteOfDay + event->randomMinutes)
-            return true;
-    }
-    return false;
-}
-#endif
-
-#if 1
 static bool isEventDueNow(Time * time, ScheduledLightEvent * event)
 {
     int todaysMinute = (int)(event->minuteOfDay + event->randomMinutes);
@@ -467,9 +184,7 @@ static bool isEventDueNow(Time * time, ScheduledLightEvent * event)
 
     return true;
 }
-#endif
 
-#if 1
 static void processEventsDueNow(Time * time, ScheduledLightEvent * event)
 {
     if (isInUse(event))
@@ -481,9 +196,7 @@ static void processEventsDueNow(Time * time, ScheduledLightEvent * event)
         }
     }
 }
-#endif
 
-#if 1
 void LightScheduler_WakeUp(void)
 {
     int i;
@@ -496,193 +209,3 @@ void LightScheduler_WakeUp(void)
         processEventsDueNow(&time, &eventList[i]);
     }
 }
-#endif
-
-
-#if 0
-static void processEventsDueNow(Time * time, ScheduledLightEvent * event)
-{
-    if (event->id != UNUSED)
-    {
-        if (isEventDueNow(time, event))
-        {
-            operateLight(event);
-            resetRandomize(event);
-        }
-    }
-}
-#endif
-
-#if 0
-static void processEventsDueNow(Time * time, ScheduledLightEvent * event)
-{
-    Day today = time->dayOfWeek;
-    int minuteOfDay = time->minuteOfDay;
-
-    if (event->id != UNUSED)
-    {
-        Day day = event->day;
-        /* if (isEventDueNow()) */
-        if ( (day == EVERYDAY) || (day == today) || (day == WEEKEND &&
-                (today == SATURDAY || today == SUNDAY)) ||
-                (day == WEEKDAY && (today >= MONDAY
-                                && today <= FRIDAY)))
-        {
-            if (minuteOfDay == event->minuteOfDay + event->randomMinutes)
-            {
-                operateLight(event);
-
-                /* resetRandomize(); */
-                if (event->randomize == RANDOM_ON)
-                    event->randomMinutes = RandomMinute_Get();
-                else
-                    event->randomMinutes = 0;
-            }
-        }
-    }
-}
-#endif
-
-#if 0
-static void processEventsDueNow(Time * time, ScheduledLightEvent * event)
-{
-    Day today = time->dayOfWeek;
-    int minuteOfDay = time->minuteOfDay;
-
-    if (event->id != UNUSED)
-    {
-        Day day = event->day;
-        /* if (isEventDueNow()) */
-        if ( (day == EVERYDAY) || (day == today) || (day == WEEKEND &&
-                (today == SATURDAY || today == SUNDAY)) ||
-                (day == WEEKDAY && (today >= MONDAY
-                                && today <= FRIDAY)))
-        {
-            if (minuteOfDay == event->minuteOfDay + event->randomMinutes)
-            {
-                /* operateLight(event); */
-                if (event->event == TURN_ON)
-                    LightController_TurnOn(event->id);
-                else if (event->event == TURN_OFF)
-                    LightController_TurnOff(event->id);
-
-                /* resetRandomize(); */
-                if (event->randomize == RANDOM_ON)
-                    event->randomMinutes = RandomMinute_Get();
-                else
-                    event->randomMinutes = 0;
-            }
-        }
-    }
-}
-#endif
-
-
-
-#if 0
-static void processEventsDueNow(Time * time, ScheduledLightEvent * event)
-{
-    Day today = time->dayOfWeek;
-    int minuteOfDay = time->minuteOfDay;
-
-    if (event->id != UNUSED)
-    {
-        Day day = event->day;
-        /* if (isEventDueNow()) */
-        if ( (day == EVERYDAY) || (day == today) || (day == WEEKEND &&
-                (today == SATURDAY || today == SUNDAY)) ||
-                (day == WEEKDAY && (today >= MONDAY
-                                && today <= FRIDAY)))
-        {
-            if (minuteOfDay == event->minuteOfDay + event->randomMinutes)
-            {
-                /* operateLight(); */
-                if (event->event == TURN_ON)
-                    LightController_TurnOn(event->id);
-                else if (event->event == TURN_OFF)
-                    LightController_TurnOff(event->id);
-
-                /* resetRandomize(); */
-                if (event->randomize == RANDOM_ON)
-                    event->randomMinutes = RandomMinute_Get();
-                else
-                    event->randomMinutes = 0;
-            }
-        }
-    }
-}
-#endif
-
-#if 0
-static void processEventsDueNow(Time * time, ScheduledLightEvent * event)
-{
-    Day today = time->dayOfWeek;
-    int minuteOfDay = time->minuteOfDay;
-
-    if (event->id != UNUSED)
-    {
-        Day day = event->day;
-        if ( (day == EVERYDAY) || (day == today) || (day == WEEKEND &&
-                (today == SATURDAY || today == SUNDAY)) ||
-                (day == WEEKDAY && (today >= MONDAY
-                                && today <= FRIDAY)))
-        {
-            /* it's the right day */
-            if (minuteOfDay == event->minuteOfDay + event->randomMinutes)
-            {
-                if (event->event == TURN_ON)
-                    LightController_TurnOn(event->id);
-                else if (event->event == TURN_OFF)
-                    LightController_TurnOff(event->id);
-
-                if (event->randomize == RANDOM_ON)
-                    event->randomMinutes = RandomMinute_Get();
-                else
-                    event->randomMinutes = 0;
-            }
-        }
-    }
-}
-#endif
-
-#if 0
-void LightScheduler_WakeUp(void)
-{
-    int i;
-    Time time;
-
-    TimeService_GetTime(&time);
-    Day td = time.dayOfWeek;
-    int min = time.minuteOfDay;
-
-    for (i = 0; i < MAX_EVENTS; i++)
-    {
-        ScheduledLightEvent * se = &eventList[i];
-        if (se->id != UNUSED)
-        {
-            Day d = se->day;
-            if ( (d == EVERYDAY) || (d == td) || (d == WEEKEND &&
-                    (td == SATURDAY || td == SUNDAY)) ||
-                    (d == WEEKDAY && (td >= MONDAY
-                                    && td <= FRIDAY)))
-            {
-                /* it's the right day */
-                if (min == se->minuteOfDay + se->randomMinutes)
-                {
-                    if (se->event == TURN_ON)
-                        LightController_TurnOn(se->id);
-                    else if (se->event == TURN_OFF)
-                        LightController_TurnOff(se->id);
-
-                    if (se->randomize == RANDOM_ON)
-                        se->randomMinutes = RandomMinute_Get();
-                    else
-                        se->randomMinutes = 0;
-
-                }
-            }
-        }
-    }
-}
-#endif
-
