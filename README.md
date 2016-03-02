@@ -14,4 +14,45 @@ This sample has been used on only Cygwin.
     * gcc-g++ v5.3.0-3 or newer
     * make v4.1-1 or newer
     * perl 5.22.1-1 or newer
+    * ccache 3.1.9-2 or newer (optional)
     * clang 3.7.1 or newer (optional)
+
+## Usage
+
+### Test
+
+Below is the flow of testing LedDriver on cygwin bash.
+
+```bash
+cd <root directory of this repository>/test/LedDriver
+make
+```
+
+And you can ccache for reduce the time of build.
+
+```bash
+make UT_USE_CCACHE=y
+```
+
+### Coverage
+
+Below is the flow of getting the coverage of LedDriver.
+
+```bash
+cd <root directory of this repository>/test/LedDriver
+make clean
+make coverage
+# Open ./coverage-report/index.html
+```
+
+### Static Analysis
+
+Below is the flow of getting the Static Analysis of LedDriver.
+
+```bash
+cd <root directory of this repository>/test/LedDriver
+make clean
+scan-build make UT_ENABLE_DEBUG=y
+# Open the static analysis report with browser you use .
+# You can get path of the static analysis report from scan-build message.
+```
