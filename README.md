@@ -8,6 +8,10 @@ Thanks for James Grenning who is author of `Test Driven Development for Embedded
 
 This sample has been used on only Cygwin.
 
-### Cygwin Requirements
+### Requirements
 
-* Cygwin v2.4.1 or newer
+* Cygwin v2.4.1 or newer, and below packages
+    * gcc-g++ v5.3.0-3 or newer
+    * make v4.1-1 or newer
+    * perl 5.22.1-1 or newer
+    * clang 3.7.1 or newer (optional)
