@@ -26,6 +26,8 @@ else
   $(error Please set PRJ_ROOT)
 endif
 
+include $(PRJ_ROOT)/framework/mk/Helper.mk
+
 # Debug off by default
 ifndef UT_ENABLE_DEBUG
   UT_ENABLE_DEBUG := n
@@ -38,7 +40,7 @@ ifndef UT_WARNINGFLAGS
                      -Wshadow \
                      -Wswitch-default \
                      -Wconversion \
-                     -Wno-missing-field-initializers
+                     -Wno-missing-field-initializers \
 
 # UT_WARNINGFLAGS += -pedantic-errors \
 #                    -Wpedantic \
@@ -75,8 +77,8 @@ ifeq "$(MAKECMDGOALS)" "coverage"
   LD_LIBRARLIES += -lgcov
 endif
 
-CFLAGS = $(compile_flags) -std=c99
-CXXFLAGS = $(compile_flags) -std=gnu++1y
+CFLAGS   := $(compile_flags) -std=c99
+CXXFLAGS := $(compile_flags) -std=gnu++1y
 CPPFLAGS += -DPATH_MAX=256
 
 # Cygwin環境ではGTEST_HAS_PTHREADが自動で1にならないので、明示的に指定する.
@@ -88,81 +90,34 @@ endif
 
 test_target := $(UNIT_NAME)Test
 
-
-#-------------------------------------------------------------------------------
-# Helper functions
-#-------------------------------------------------------------------------------
-
-# $(call get-src-from-dir,dir)
-define get-src-from-dir
-  $(wildcard $1/*.cpp) $(wildcard $1/*.cc) $(wildcard $1/*.c)
-endef
-
-# $(call get-dirs-from-dirspec,dir)
-define get-dirs-from-dirspec
-  $(wildcard $1)
-endef
-
-__src_to = $(subst .c,$1, $(subst .cpp,$1, $(subst .cc,$1,$2)))
-
-# $(call src-to,suffix,src)
-define src-to
-  $(addprefix obj/,$(call __src_to,$1,$2))
-endef
-
-# $(call get-lib-from-dir,dir)
-define get-lib-from-dir
-  $(wildcard $1/*.a)
-endef
-
-# $(call get-lib-from-dir,dir)
-define get-lib-from-dir
-  $(wildcard $1/*.a)
-endef
-
-# $(call debug-print-list,list)
-define debug-print-list
-   $(foreach word,$1,echo "  $(word)";) echo;
-endef
-
-
-src_to_o = $(call src-to,.o,$1)
-src_to_d = $(call src-to,.d,$1)
-src_to_gcda = $(call src-to,.gcda,$1)
-src_to_gcno = $(call src-to,.gcno,$1)
-
 gmock_dir := $(PRJ_ROOT)/framework/googletest/googlemock
 gmock_src := googlemock/src/gmock-all.cc googlemock/src/gmock_main.cc
-gmock_obj := $(call src_to_o,$(gmock_src))
+gmock_obj := $(call src-to-o,$(gmock_src))
 
 gtest_dir := $(PRJ_ROOT)/framework/googletest/googletest
 gtest_src := googletest/src/gtest-all.cc
-gtest_obj := $(call src_to_o,$(gtest_src))
+gtest_obj := $(call src-to-o,$(gtest_src))
 
 include += -I$(gmock_dir) -I$(gtest_dir) \
            -I$(gmock_dir)/include -I$(gtest_dir)/include \
            $(foreach dir, $(call get-dirs-from-dirspec, $(include_dir)), -I$(dir))
 
-obj      = $(call src_to_o,$(SRC))
-test_obj = $(call src_to_o,$(TEST_CODE))
-mock_obj = $(call src_to_o,$(MOCK_CODE))
+obj      := $(call src-to-o,$(SRC))
+test_obj := $(call src-to-o,$(TEST_CODE))
+mock_obj := $(call src-to-o,$(MOCK_CODE))
 
-all_src = $(SRC) $(TEST_CODE) $(MOCK_CODE) $(gmock_src) $(gtest_src)
-dependents = $(call src_to_d,$(all_src))
+all_src := $(SRC) $(TEST_CODE) $(MOCK_CODE) $(gmock_src) $(gtest_src)
+dep     := $(call src-to-d,$(all_src))
 
 # Test coverage with gcov
-gcov_gcda_files = $(call src_to_gcda, $(all_src))
-gcov_gcno_files = $(call src_to_gcno, $(all_src))
-stuff_to_clean += $(gcov_gcda_files) \
-                  $(gcov_gcno_files)
+gcov_gcda_files := $(call src-to-gcda, $(all_src))
+gcov_gcno_files := $(call src-to-gcno, $(all_src))
 
-#The gcda files for gcov need to be deleted before each run
-#To avoid annoying messages.
-covfile_clean = rm -f $(gcov_gcda_files) $(gcov_output) $(gcov_report) $(gcov_error) ; \
-                rm -rf $(lcov_tracefile) coverage-report
-run_test_target = $(covfile_clean) ; ./$(test_target) ;
-
-stuff_to_clean = $(obj) $(test_obj) $(mock_obj) $(dependents) $(gmock_obj) $(gtest_obj)
+stuff_to_clean := $(obj) $(test_obj) $(mock_obj) $(dep) \
+                  $(gmock_obj) $(gtest_obj) \
+                  $(gcov_gcda_files) $(gcov_gcno_files) \
+                  coverage-report/* lcov.info \
+                  $(test_target)
 
 vpath %.c $(src_dir)
 vpath %.cpp $(mock_dir)
@@ -170,7 +125,7 @@ vpath %.cc $(PRJ_ROOT)/framework/googletest
 
 .PHONY: all
 all: $(test_target)
-	$(run_test_target)
+	./$(test_target)
 
 .PHONY: coverage
 coverage: all
@@ -198,17 +153,13 @@ obj/%.o: %.c
 	$(COMPILE.c) -MMD -MP  $(OUTPUT_OPTION) $<
 
 ifneq "$(MAKECMDGOALS)" "clean"
-  -include $(dependents)
+  -include $(dep)
 endif
 
 .PHONY: clean
 clean:
 	echo Making clean
 	rm -rf $(stuff_to_clean)
-	rm -rf gcov obj
-	find . -name "*.gcno" | xargs rm -f
-	find . -name "*.gcda" | xargs rm -f
-	find . -name "*.exe"  | xargs rm -rf
 
 ctags_option = -R --c++-kinds=+pl --fields=+iaS --extra=+q
 

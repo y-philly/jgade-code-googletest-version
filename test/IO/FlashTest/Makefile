@@ -16,4 +16,4 @@ TEST_CODE := FlashTest.cpp
 #
 MOCK_CODE := IO/MockIO.cpp IO/MockMicroTime.cpp
 
-include $(PRJ_ROOT)/framework/MakefileWorker.mk
+include $(PRJ_ROOT)/framework/mk/MakefileWorker.mk
