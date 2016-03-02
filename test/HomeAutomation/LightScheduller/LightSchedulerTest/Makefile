@@ -20,4 +20,4 @@ MOCK_CODE := util/MockTimeService.cpp \
              Device/MockLightDriver.cpp \
              HomeAutomation/MockRandomMinute.cpp
 
-include $(PRJ_ROOT)/framework/MakefileWorker.mk
+include $(PRJ_ROOT)/framework/mk/MakefileWorker.mk

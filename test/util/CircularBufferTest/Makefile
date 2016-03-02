@@ -17,4 +17,4 @@ TEST_CODE := CircularBufferTest.cpp
 #
 MOCK_CODE :=
 
-include $(PRJ_ROOT)/framework/MakefileWorker.mk
+include $(PRJ_ROOT)/framework/mk/MakefileWorker.mk
