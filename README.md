@@ -21,7 +21,7 @@ This sample has been used on only Cygwin.
 
 ### Test
 
-Below is the flow of testing LedDriver on cygwin bash.
+Below is the flow of testing LedDriver on cygwin shell.
 
 ```bash
 cd <root directory of this repository>/test/LedDriver
@@ -36,7 +36,7 @@ make UT_USE_CCACHE=y
 
 ### Coverage
 
-Below is the flow of getting the coverage of LedDriver.
+Below is the flow of getting the coverage of LedDriver on Cygwin shell.
 
 ```bash
 cd <root directory of this repository>/test/LedDriver
@@ -47,7 +47,7 @@ make coverage
 
 ### Static Analysis
 
-Below is the flow of getting the Static Analysis of LedDriver.
+Below is the flow of getting the Static Analysis of LedDriver on cygwin shell.
 
 ```bash
 cd <root directory of this repository>/test/LedDriver
