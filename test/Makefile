@@ -1,4 +1,4 @@
-UNIT_LIST := LedDriver IO util
+UT_LIST := LedDriver IO util HomeAutomation
 
 # $(call do-component-list,list,target)
 define do-component-list
@@ -10,16 +10,16 @@ endef
 
 .PHONY: all
 all:
-	$(call do-component-list,$(UNIT_LIST),$@)
+	$(call do-component-list,$(UT_LIST),$@)
 
 .PHONY: build
 build:
-	$(call do-component-list,$(UNIT_LIST),$@)
+	$(call do-component-list,$(UT_LIST),$@)
 
 .PHONY: coverage
 coverage:
-	$(call do-component-list,$(UNIT_LIST),$@)
+	$(call do-component-list,$(UT_LIST),$@)
 
 .PHONY: clean
 clean:
-	$(call do-component-list,$(UNIT_LIST),$@)
+	$(call do-component-list,$(UT_LIST),$@)
