@@ -1,4 +1,4 @@
-UT_LIST := LedDriverTest IO util HomeAutomation
+UT_LIST := LightControllerTest LightScheduller
 
 # $(call do-ut-list,list,target)
 define do-ut-list
