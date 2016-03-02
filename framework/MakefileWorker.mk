@@ -31,7 +31,7 @@ ifndef UT_ENABLE_DEBUG
   UT_ENABLE_DEBUG := n
 endif
 
-# Default warnings
+# Default compiler warnings
 ifndef UT_WARNINGFLAGS
   UT_WARNINGFLAGS := -Wall \
                      -Wextra \
@@ -86,21 +86,50 @@ ifeq ($(UT_ENABLE_DEBUG), y)
   CPPFLAGS += -D_DEBUG_
 endif
 
-
-# Helper functions
-get_src_from_dir = $(wildcard $1/*.cpp) $(wildcard $1/*.cc) $(wildcard $1/*.c)
-get_dirs_from_dirspec = $(wildcard $1)
-get_src_from_dir_list = $(foreach dir, $1, $(call get_src_from_dir,$(dir)))
-__src_to = $(subst .c,$1, $(subst .cpp,$1, $(subst .cc,$1,$2)))
-src_to = $(addprefix obj/,$(call __src_to,$1,$2))
-src_to_o = $(call src_to,.o,$1)
-src_to_d = $(call src_to,.d,$1)
-src_to_gcda = $(call src_to,.gcda,$1)
-src_to_gcno = $(call src_to,.gcno,$1)
-get_lib_from_dir = $(wildcard $1/*.a)
-debug_print_list = $(foreach word,$1,echo "  $(word)";) echo;
-
 test_target := $(UNIT_NAME)Test
+
+
+#-------------------------------------------------------------------------------
+# Helper functions
+#-------------------------------------------------------------------------------
+
+# $(call get-src-from-dir,dir)
+define get-src-from-dir
+  $(wildcard $1/*.cpp) $(wildcard $1/*.cc) $(wildcard $1/*.c)
+endef
+
+# $(call get-dirs-from-dirspec,dir)
+define get-dirs-from-dirspec
+  $(wildcard $1)
+endef
+
+__src_to = $(subst .c,$1, $(subst .cpp,$1, $(subst .cc,$1,$2)))
+
+# $(call src-to,suffix,src)
+define src-to
+  $(addprefix obj/,$(call __src_to,$1,$2))
+endef
+
+# $(call get-lib-from-dir,dir)
+define get-lib-from-dir
+  $(wildcard $1/*.a)
+endef
+
+# $(call get-lib-from-dir,dir)
+define get-lib-from-dir
+  $(wildcard $1/*.a)
+endef
+
+# $(call debug-print-list,list)
+define debug-print-list
+   $(foreach word,$1,echo "  $(word)";) echo;
+endef
+
+
+src_to_o = $(call src-to,.o,$1)
+src_to_d = $(call src-to,.d,$1)
+src_to_gcda = $(call src-to,.gcda,$1)
+src_to_gcno = $(call src-to,.gcno,$1)
 
 gmock_dir := $(PRJ_ROOT)/framework/googletest/googlemock
 gmock_src := googlemock/src/gmock-all.cc googlemock/src/gmock_main.cc
@@ -112,7 +141,7 @@ gtest_obj := $(call src_to_o,$(gtest_src))
 
 include += -I$(gmock_dir) -I$(gtest_dir) \
            -I$(gmock_dir)/include -I$(gtest_dir)/include \
-           $(foreach dir, $(call get_dirs_from_dirspec, $(include_dir)), -I$(dir))
+           $(foreach dir, $(call get-dirs-from-dirspec, $(include_dir)), -I$(dir))
 
 obj      = $(call src_to_o,$(SRC))
 test_obj = $(call src_to_o,$(TEST_CODE))
@@ -204,20 +233,20 @@ include_paths.vim:
 debug:
 	@echo
 	@echo "Target Source code files:"
-	@$(call debug_print_list,$(SRC))
+	@$(call debug-print-list,$(SRC))
 	@echo "Target obj files:"
-	@$(call debug_print_list,$(obj))
+	@$(call debug-print-list,$(obj))
 	@echo "Test code files:"
-	@$(call debug_print_list,$(TEST_CODE))
+	@$(call debug-print-list,$(TEST_CODE))
 	@echo "Test obj files:"
-	@$(call debug_print_list,$(test_obj))
+	@$(call debug-print-list,$(test_obj))
 	@echo "Mock code files:"
-	@$(call debug_print_list,$(MOCK_CODE))
+	@$(call debug-print-list,$(MOCK_CODE))
 	@echo "Mock obj files:"
-	@$(call debug_print_list,$(mock_obj))
+	@$(call debug-print-list,$(mock_obj))
 	@echo "All Input Dependency files:"
-	@$(call debug_print_list,$(dep))
+	@$(call debug-print-list,$(dep))
 	@echo Stuff to clean:
-	@$(call debug_print_list,$(stuff_to_clean))
+	@$(call debug-print-list,$(stuff_to_clean))
 	@echo Includes:
-	@$(call debug_print_list,$(include))
+	@$(call debug-print-list,$(include))
