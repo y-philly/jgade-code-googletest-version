@@ -71,7 +71,7 @@ protected:
 
 class when_all_leds_turn_off : public LedDriverTest {};
 
-TEST_F(when_all_leds_turn_off, turn_on_led_one)
+TEST_F(when_all_leds_turn_off, TurnOn_turns_on_one_led)
 {
     LedDriver_TurnOn(1);
     ASSERT_THAT(virtualLeds_, Eq(1u));
@@ -84,14 +84,14 @@ TEST_F(when_all_leds_turn_off, turn_off_led_one)
     ASSERT_THAT(virtualLeds_, Eq(0u));
 }
 
-TEST_F(when_all_leds_turn_off, turn_on_multiple_leds)
+TEST_F(when_all_leds_turn_off, TurnOn_turns_on_multiple_leds)
 {
     LedDriver_TurnOn(9);
     LedDriver_TurnOn(8);
     ASSERT_THAT(virtualLeds_, Eq(0x180u));
 }
 
-TEST_F(when_all_leds_turn_off, turn_off_any_led)
+TEST_F(when_all_leds_turn_off, TurnOff_turns_off_any_led)
 {
     LedDriver_TurnAllOn();
     LedDriver_TurnOff(8);
@@ -105,34 +105,34 @@ TEST_F(when_all_leds_turn_off, led_memory_is_not_readable)
     ASSERT_THAT(virtualLeds_, Eq(0x80u));
 }
 
-TEST_F(when_all_leds_turn_off, upper_and_lower_bounds)
+TEST_F(when_all_leds_turn_off, TurnOn_turns_on_upper_and_lower_bounds_leds)
 {
     LedDriver_TurnOn(1);
     LedDriver_TurnOn(16);
     ASSERT_THAT(virtualLeds_, Eq(0x8001u));
 }
 
-TEST_F(when_all_leds_turn_off, is_on)
+TEST_F(when_all_leds_turn_off, IsOn_returns_current_on_state)
 {
     ASSERT_THAT(LedDriver_IsOn(1), Eq(false));
     LedDriver_TurnOn(1);
     ASSERT_THAT(LedDriver_IsOn(1), Eq(true));
 }
 
-TEST_F(when_all_leds_turn_off, is_off)
+TEST_F(when_all_leds_turn_off, IsOff_returns_current_off_state)
 {
     ASSERT_THAT(LedDriver_IsOff(12), Eq(true));
     LedDriver_TurnOn(12);
     ASSERT_THAT(LedDriver_IsOff(12), Eq(false));
 }
 
-TEST_F(when_all_leds_turn_off, all_on)
+TEST_F(when_all_leds_turn_off, TurnAllOn_turns_on_all_leds)
 {
     LedDriver_TurnAllOn();
     ASSERT_THAT(virtualLeds_, Eq(0xffffu));
 }
 
-TEST_F(when_all_leds_turn_off, all_off)
+TEST_F(when_all_leds_turn_off, TurnAllOff_turns_off_all_leds)
 {
     LedDriver_TurnAllOn();
     LedDriver_TurnAllOff();
@@ -144,7 +144,7 @@ class when_ledNumber_is_out_of_bounds :
     public LedDriverTest,
     public ::testing::WithParamInterface<int> {};
 
-TEST_P(when_ledNumber_is_out_of_bounds, turn_on_does_no_harm)
+TEST_P(when_ledNumber_is_out_of_bounds, TurnOn_does_no_harm)
 {
     const int n = GetParam();
 
@@ -157,7 +157,7 @@ TEST_P(when_ledNumber_is_out_of_bounds, turn_on_does_no_harm)
     ASSERT_THAT(virtualLeds_, Eq(0u));
 }
 
-TEST_P(when_ledNumber_is_out_of_bounds, turn_off_does_no_harm)
+TEST_P(when_ledNumber_is_out_of_bounds, TurnOff_does_no_harm)
 {
     LedDriver_TurnAllOn();
 
@@ -184,7 +184,7 @@ TEST_F(LedDriver, out_of_bounds_to_do)
 }
 #endif
 
-TEST_F(when_ledNumber_is_out_of_bounds, produces_runtime_error)
+TEST_F(when_ledNumber_is_out_of_bounds, TurnOn_produces_runtime_error)
 {
     const std::string kExpectLog{ "LED Driver: out-of-bounds LED" };
 
