@@ -39,7 +39,7 @@ make UT_USE_CCACHE=y
 Below is the flow of getting the coverage of LedDriver on Cygwin shell.
 
 ```bash
-cd <root directory of this repository>/test/LedDriverTest
+cd <root directory of this repository>/test/LedDriver
 make clean
 make coverage
 # Open ./coverage-report/index.html
