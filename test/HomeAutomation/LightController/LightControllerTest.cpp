@@ -24,7 +24,6 @@
 
 
 namespace HomeAutomation {
-namespace LightControllerTest {
 
 
 using ::testing::_;
@@ -33,9 +32,9 @@ using ::testing::NotNull;
 using ::testing::Sequence;
 
 
-class LightController : public ::testing::TestWithParam<int> {
+class LightControllerTest : public ::testing::TestWithParam<int> {
 public:
-    LightController() : lightDriverVector_(MAX_LIGHTS)
+    LightControllerTest() : lightDriverVector_(MAX_LIGHTS)
     {
     }
 
@@ -102,7 +101,7 @@ TEST(LifeCycleOfLightController, driver_is_destroyed_by_light_controller)
 }
 
 
-TEST_F(LightController, turn_on)
+TEST_F(LightControllerTest, turn_on)
 {
     EXPECT_CALL(mockLightDriver_, Destroy(_))
         .Times(1);
@@ -116,7 +115,7 @@ TEST_F(LightController, turn_on)
 }
 
 
-TEST_F(LightController, turn_off)
+TEST_F(LightControllerTest, turn_off)
 {
     EXPECT_CALL(mockLightDriver_, Destroy(_))
         .Times(1);
@@ -129,7 +128,7 @@ TEST_F(LightController, turn_off)
     LightController_TurnOff(1);
 }
 
-TEST_F(LightController, all_drivers_destroyed)
+TEST_F(LightControllerTest, all_drivers_destroyed)
 {
     for (int i = 0; i < MAX_LIGHTS; i++)
     {
@@ -140,7 +139,7 @@ TEST_F(LightController, all_drivers_destroyed)
     }
 }
 
-TEST_P(LightController, can_be_added_light_when_id_is_in_bounds)
+TEST_P(LightControllerTest, can_be_added_light_when_id_is_in_bounds)
 {
     const int id = GetParam();
     const bool expectedResult = id_is_valid(id);
@@ -154,16 +153,16 @@ TEST_P(LightController, can_be_added_light_when_id_is_in_bounds)
 
 INSTANTIATE_TEST_CASE_P(
     InRange,
-    LightController,
+    LightControllerTest,
     ::testing::Values(0, (MAX_LIGHTS - 1), MAX_LIGHTS));
 
 INSTANTIATE_TEST_CASE_P(
     OutOfRange,
-    LightController,
+    LightControllerTest,
     ::testing::Values(MAX_LIGHTS));
 
 
-TEST_F(LightController, remove_existing_light_driver_succeeds)
+TEST_F(LightControllerTest, remove_existing_light_driver_succeeds)
 {
     EXPECT_CALL(mockLightDriver_, Destroy(_))
         .Times(1);
@@ -176,7 +175,7 @@ TEST_F(LightController, remove_existing_light_driver_succeeds)
     LightController_Remove(10);
 }
 
-TEST_F(LightController, removed_light_does_nothing)
+TEST_F(LightControllerTest, removed_light_does_nothing)
 {
     EXPECT_CALL(mockLightDriver_, Destroy(_))
         .Times(1);
@@ -192,12 +191,12 @@ TEST_F(LightController, removed_light_does_nothing)
     ASSERT_THAT(LightController_TurnOff(1), Eq(false));
 }
 
-TEST_F(LightController, rejects_null_drivers)
+TEST_F(LightControllerTest, rejects_null_drivers)
 {
     ASSERT_THAT(LightController_Add(1, NULL), Eq(false));
 }
 
-TEST_F(LightController, RemoveNonExistingLightDriverFails)
+TEST_F(LightControllerTest, RemoveNonExistingLightDriverFails)
 {
     ASSERT_THAT(LightController_Remove(10), Eq(false));
 }
@@ -214,5 +213,5 @@ TEST_F(LightController, RemoveNonExistingLightDriverFails)
 //     LONGS_EQUAL(2, CountingLightDriver_GetCallCount(otherDriver));
 // }
 
-} // namespace LightControllerTest
+
 } // namespace HomeAutomation
