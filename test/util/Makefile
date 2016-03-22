@@ -1,4 +1,4 @@
-UT_LIST := CircularBufferTest
+UT_LIST := CircularBuffer
 
 # $(call do-ut-list,list,target)
 define do-ut-list
