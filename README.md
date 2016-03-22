@@ -24,7 +24,7 @@ This sample has been used on only Cygwin.
 Below is the flow of testing LedDriver on cygwin shell.
 
 ```bash
-cd <root directory of this repository>/test/LedDriver
+cd <root directory of this repository>/test/Driver/LedDriver
 make
 ```
 
@@ -39,7 +39,7 @@ make UT_USE_CCACHE=y
 Below is the flow of getting the coverage of LedDriver on Cygwin shell.
 
 ```bash
-cd <root directory of this repository>/test/LedDriver
+cd <root directory of this repository>/test/Driver/LedDriver
 make clean
 make coverage
 # Open ./coverage-report/index.html
@@ -50,7 +50,7 @@ make coverage
 Below is the flow of getting the Static Analysis of LedDriver on cygwin shell.
 
 ```bash
-cd <root directory of this repository>/test/LedDriver
+cd <root directory of this repository>/test/Driver/LedDriver
 make clean
 scan-build make UT_ENABLE_DEBUG=y
 # Open the static analysis report with browser you use .
