@@ -23,15 +23,14 @@
 
 
 namespace HomeAutomation {
-namespace LightSchedulerTest {
 
 
-TEST_F(LightScheduler, create_does_not_change_the_lights)
+TEST_F(LightSchedulerTest, create_does_not_change_the_lights)
 {
     // Do nothing google test version.
 }
 
-TEST_F(LightScheduler, schedule_everyday_not_time_yet)
+TEST_F(LightSchedulerTest, schedule_everyday_not_time_yet)
 {
     LightScheduler_ScheduleTurnOn(3, EVERYDAY, kScheduledMinute_);
 
@@ -46,7 +45,7 @@ TEST_F(LightScheduler, schedule_everyday_not_time_yet)
     LightScheduler_WakeUp();
 }
 
-TEST_F(LightScheduler, schedule_on_today_its_time)
+TEST_F(LightSchedulerTest, schedule_on_today_its_time)
 {
     LightScheduler_ScheduleTurnOn(3, EVERYDAY, kScheduledMinute_);
 
@@ -65,7 +64,7 @@ TEST_F(LightScheduler, schedule_on_today_its_time)
     LightScheduler_WakeUp();
 }
 
-TEST_F(LightScheduler, schedule_on_tuesday_and_its_not_tuesday_and_its_time)
+TEST_F(LightSchedulerTest, schedule_on_tuesday_and_its_not_tuesday_and_its_time)
 {
     LightScheduler_ScheduleTurnOn(3, TUESDAY, kScheduledMinute_);
 
@@ -84,7 +83,7 @@ TEST_F(LightScheduler, schedule_on_tuesday_and_its_not_tuesday_and_its_time)
     LightScheduler_WakeUp();
 }
 
-TEST_F(LightScheduler, schedule_on_tuesday_and_its_tuesday_and_its_time)
+TEST_F(LightSchedulerTest, schedule_on_tuesday_and_its_tuesday_and_its_time)
 {
     LightScheduler_ScheduleTurnOn(3, TUESDAY, kScheduledMinute_);
 
@@ -103,7 +102,7 @@ TEST_F(LightScheduler, schedule_on_tuesday_and_its_tuesday_and_its_time)
     LightScheduler_WakeUp();
 }
 
-TEST_F(LightScheduler, schedule_off_tuesday_and_its_tuesday_and_its_time)
+TEST_F(LightSchedulerTest, schedule_off_tuesday_and_its_tuesday_and_its_time)
 {
     LightScheduler_ScheduleTurnOff(kLightNumber_, TUESDAY, kScheduledMinute_);
 
@@ -122,7 +121,7 @@ TEST_F(LightScheduler, schedule_off_tuesday_and_its_tuesday_and_its_time)
     LightScheduler_WakeUp();
 }
 
-TEST_F(LightScheduler, schedule_off_weekend_and_its_saturday_and_its_time)
+TEST_F(LightSchedulerTest, schedule_off_weekend_and_its_saturday_and_its_time)
 {
     LightScheduler_ScheduleTurnOff(kLightNumber_, WEEKEND, kScheduledMinute_);
 
@@ -141,7 +140,7 @@ TEST_F(LightScheduler, schedule_off_weekend_and_its_saturday_and_its_time)
     LightScheduler_WakeUp();
 }
 
-TEST_F(LightScheduler, schedule_on_weekend_and_its_sunday_and_its_time)
+TEST_F(LightSchedulerTest, schedule_on_weekend_and_its_sunday_and_its_time)
 {
     LightScheduler_ScheduleTurnOn(kLightNumber_, WEEKEND, kScheduledMinute_);
 
@@ -160,7 +159,7 @@ TEST_F(LightScheduler, schedule_on_weekend_and_its_sunday_and_its_time)
     LightScheduler_WakeUp();
 }
 
-TEST_F(LightScheduler, schedule_on_weekend_and_its_monday_and_its_time)
+TEST_F(LightSchedulerTest, schedule_on_weekend_and_its_monday_and_its_time)
 {
     LightScheduler_ScheduleTurnOff(kLightNumber_, WEEKEND, kScheduledMinute_);
 
@@ -179,7 +178,7 @@ TEST_F(LightScheduler, schedule_on_weekend_and_its_monday_and_its_time)
     LightScheduler_WakeUp();
 }
 
-TEST_F(LightScheduler, schedule_on_weekday_and_its_sunday_and_its_time)
+TEST_F(LightSchedulerTest, schedule_on_weekday_and_its_sunday_and_its_time)
 {
     LightScheduler_ScheduleTurnOn(kLightNumber_, WEEKEND, kScheduledMinute_);
 
@@ -198,7 +197,7 @@ TEST_F(LightScheduler, schedule_on_weekday_and_its_sunday_and_its_time)
     LightScheduler_WakeUp();
 }
 
-TEST_F(LightScheduler, schedule_on_weekday_and_its_monday_and_its_time)
+TEST_F(LightSchedulerTest, schedule_on_weekday_and_its_monday_and_its_time)
 {
     LightScheduler_ScheduleTurnOn(kLightNumber_, WEEKDAY, kScheduledMinute_);
 
@@ -217,7 +216,7 @@ TEST_F(LightScheduler, schedule_on_weekday_and_its_monday_and_its_time)
     LightScheduler_WakeUp();
 }
 
-TEST_F(LightScheduler, schedule_on_weekday_and_its_friday_and_its_time)
+TEST_F(LightSchedulerTest, schedule_on_weekday_and_its_friday_and_its_time)
 {
     LightScheduler_ScheduleTurnOn(kLightNumber_, WEEKDAY, kScheduledMinute_);
 
@@ -236,7 +235,7 @@ TEST_F(LightScheduler, schedule_on_weekday_and_its_friday_and_its_time)
     LightScheduler_WakeUp();
 }
 
-TEST_F(LightScheduler, schedule_on_weekday_and_its_saturday_and_its_time)
+TEST_F(LightSchedulerTest, schedule_on_weekday_and_its_saturday_and_its_time)
 {
     LightScheduler_ScheduleTurnOn(kLightNumber_, WEEKDAY, kScheduledMinute_);
 
@@ -255,7 +254,7 @@ TEST_F(LightScheduler, schedule_on_weekday_and_its_saturday_and_its_time)
     LightScheduler_WakeUp();
 }
 
-TEST_F(LightScheduler, RemoveScheduledEvent)
+TEST_F(LightSchedulerTest, RemoveScheduledEvent)
 {
     LightScheduler_ScheduleTurnOn(6, MONDAY, kScheduledMinute_);
     LightScheduler_ScheduleRemove(6, MONDAY, kScheduledMinute_);
@@ -267,7 +266,7 @@ TEST_F(LightScheduler, RemoveScheduledEvent)
     LightScheduler_WakeUp();
 }
 
-TEST_F(LightScheduler, multiple_scheduled_events_same_time)
+TEST_F(LightSchedulerTest, multiple_scheduled_events_same_time)
 {
     LightScheduler_ScheduleTurnOff(4, MONDAY, kScheduledMinute_);
     LightScheduler_ScheduleTurnOn(3, MONDAY, kScheduledMinute_);
@@ -288,7 +287,7 @@ TEST_F(LightScheduler, multiple_scheduled_events_same_time)
     LightScheduler_WakeUp();
 }
 
-TEST_F(LightScheduler, multiple_scheduled_events_different_times)
+TEST_F(LightSchedulerTest, multiple_scheduled_events_different_times)
 {
     LightScheduler_ScheduleTurnOff(4, MONDAY, kScheduledMinute_);
     LightScheduler_ScheduleTurnOn(3, MONDAY, (kScheduledMinute_ + 1));
@@ -331,5 +330,4 @@ TEST_F(LightScheduler, multiple_scheduled_events_different_times)
 }
 
 
-} // namespace LightSchedulerTest
 } // namespace HomeAutomation
