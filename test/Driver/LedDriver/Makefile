@@ -1,5 +1,5 @@
 UNIT_NAME := LedDriver
-PRJ_ROOT  := ../..
+PRJ_ROOT  := ../../..
 
 #
 # srcディレクトリからの相対:パスでテストするソースコードを列挙する.
