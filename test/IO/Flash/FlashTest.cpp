@@ -26,20 +26,20 @@
 #include "IO/Flash.h"
 
 
+namespace IO {
+
+
 using ::testing::Eq;
 using ::testing::Return;
 using ::testing::Sequence;
 
 
-namespace FlashTest {
-
-
-class Flash : public ::testing::Test {
+class FlashTest : public ::testing::Test {
 protected:
     virtual void SetUp()
     {
-        IO::gMockIOPtr = &mockIO_;
-        IO::gMockMicroTimePtr = &mockMicroTime_;
+        gMockIOPtr = &mockIO_;
+        gMockMicroTimePtr = &mockMicroTime_;
 
         Flash_Create();
     }
@@ -101,13 +101,15 @@ protected:
     static constexpr IoAddress kAddress_ = 0xfeed;
     static constexpr IoData kData_ = 0x1dea;
 
-    IO::MockIO mockIO_;
-    IO::MockMicroTime mockMicroTime_;
+    MockIO mockIO_;
+    MockMicroTime mockMicroTime_;
 
     Sequence sequence_;
 };
 
-TEST_F(Flash, write_success_immediately)
+class after_create : public FlashTest {};
+
+TEST_F(after_create, write_success_immediately)
 {
     EXPECT_CALL(mockMicroTime_, Get())
         .Times(1)
@@ -124,7 +126,7 @@ TEST_F(Flash, write_success_immediately)
     ASSERT_THAT(result, Eq(FLASH_SUCCESS));
 }
 
-TEST_F(Flash, program_succeeds_not_immediately)
+TEST_F(after_create, program_succeeds_not_immediately)
 {
    EXPECT_CALL(mockMicroTime_, Get())
         .Times(1)
@@ -142,7 +144,7 @@ TEST_F(Flash, program_succeeds_not_immediately)
     ASSERT_THAT(result, Eq(FLASH_SUCCESS));
 }
 
-TEST_F(Flash, write_fails_vpp_error)
+TEST_F(after_create, write_fails_vpp_error)
 {
     EXPECT_CALL(mockMicroTime_, Get())
         .Times(1)
@@ -159,7 +161,7 @@ TEST_F(Flash, write_fails_vpp_error)
     ASSERT_THAT(result, Eq(FLASH_VPP_ERROR));
 }
 
-TEST_F(Flash, write_fails_program_error)
+TEST_F(after_create, write_fails_program_error)
 {
     EXPECT_CALL(mockMicroTime_, Get())
         .Times(1)
@@ -176,7 +178,7 @@ TEST_F(Flash, write_fails_program_error)
     ASSERT_THAT(result, Eq(FLASH_PROGRAM_ERROR));
 }
 
-TEST_F(Flash, write_fails_protected_block_error)
+TEST_F(after_create, write_fails_protected_block_error)
 {
     EXPECT_CALL(mockMicroTime_, Get())
         .Times(1)
@@ -193,7 +195,7 @@ TEST_F(Flash, write_fails_protected_block_error)
     ASSERT_THAT(result, Eq(FLASH_PROTECTED_BLOCK_ERROR));
 }
 
-TEST_F(Flash, write_fails_flash_unknown_program_error)
+TEST_F(after_create, write_fails_flash_unknown_program_error)
 {
     EXPECT_CALL(mockMicroTime_, Get())
         .Times(1)
@@ -210,7 +212,7 @@ TEST_F(Flash, write_fails_flash_unknown_program_error)
     ASSERT_THAT(result, Eq(FLASH_UNKNOWN_PROGRAM_ERROR));
 }
 
-TEST_F(Flash, write_fails_flash_read_back_error)
+TEST_F(after_create, write_fails_flash_read_back_error)
 {
     EXPECT_CALL(mockMicroTime_, Get())
         .Times(1)
@@ -227,7 +229,7 @@ TEST_F(Flash, write_fails_flash_read_back_error)
     ASSERT_THAT(result, Eq(FLASH_READ_BACK_ERROR));
 }
 
-TEST_F(Flash, write_succeeds_ignores_other_bits_until_ready)
+TEST_F(after_create, write_succeeds_ignores_other_bits_until_ready)
 {
     EXPECT_CALL(mockMicroTime_, Get())
         .Times(1)
@@ -253,7 +255,7 @@ TEST_F(Flash, write_succeeds_ignores_other_bits_until_ready)
     ASSERT_THAT(result, Eq(FLASH_SUCCESS));
 }
 
-TEST_F(Flash, write_fails_timeout)
+TEST_F(after_create, write_fails_timeout)
 {
     EXPECT_CALL(mockMicroTime_, Get())
         .Times(1)
@@ -269,7 +271,7 @@ TEST_F(Flash, write_fails_timeout)
     ASSERT_THAT(result, Eq(FLASH_TIMEOUT_ERROR));
 }
 
-TEST_F(Flash, write_fails_timeout_at_end_of_time)
+TEST_F(after_create, write_fails_timeout_at_end_of_time)
 {
     EXPECT_CALL(mockMicroTime_, Get())
         .Times(1)
@@ -286,4 +288,4 @@ TEST_F(Flash, write_fails_timeout_at_end_of_time)
     ASSERT_THAT(result, Eq(FLASH_TIMEOUT_ERROR));
 }
 
-} // namespace FlashTest
+} // namespace IO

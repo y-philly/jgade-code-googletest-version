@@ -1,4 +1,4 @@
-UT_LIST := LightControllerTest LightScheduller
+UT_LIST := LightController LightScheduller
 
 # $(call do-ut-list,list,target)
 define do-ut-list

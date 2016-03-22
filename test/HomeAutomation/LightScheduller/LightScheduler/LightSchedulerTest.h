@@ -15,7 +15,6 @@
 
 
 namespace HomeAutomation {
-namespace LightSchedulerTest {
 
 
 using ::testing::_;
@@ -34,9 +33,9 @@ enum class LightState {
 };
 
 
-class LightScheduler : public ::testing::Test {
+class LightSchedulerTest : public ::testing::Test {
 public:
-    LightScheduler() : lightDriverStructVector_(MAX_LIGHTS) {}
+    LightSchedulerTest() : lightDriverStructVector_(MAX_LIGHTS) {}
 
 protected:
     virtual void SetUp()
@@ -106,8 +105,6 @@ protected:
 };
 
 
-
-} // namespace LightSchedulerTest
 } // namespace HomeAutomation
 
 #endif  // _HOME_AUTOMATION_LIGHT_SCHEDULER_H_

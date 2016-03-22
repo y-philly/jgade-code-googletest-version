@@ -24,13 +24,13 @@
 
 
 namespace HomeAutomation {
-namespace LightSchedulerTest {
 
-class LightSchedulerRandomize : public LightScheduler {
+
+class LightSchedulerRandomizeTest : public LightSchedulerTest {
 protected:
     virtual void SetUp()
     {
-        LightScheduler::SetUp();
+        LightSchedulerTest::SetUp();
         gMockRandomMinutePtr = &mockRandomMinute_;
     }
 
@@ -40,7 +40,7 @@ protected:
 };
 
 
-TEST_F(LightSchedulerRandomize, turns_on_early)
+TEST_F(LightSchedulerRandomizeTest, turns_on_early)
 {
     LightScheduler_ScheduleTurnOn(4, EVERYDAY, 600);
 
@@ -70,7 +70,7 @@ TEST_F(LightSchedulerRandomize, turns_on_early)
 }
 
 
-TEST_F(LightSchedulerRandomize, enable_randomize)
+TEST_F(LightSchedulerRandomizeTest, enable_randomize)
 {
     LightScheduler_ScheduleTurnOn(kLightNumber_, EVERYDAY, kScheduledMinute_);
 
@@ -99,7 +99,7 @@ TEST_F(LightSchedulerRandomize, enable_randomize)
     LightScheduler_WakeUp();
 }
 
-TEST_F(LightSchedulerRandomize, different_randmom_factor_the_second_day)
+TEST_F(LightSchedulerRandomizeTest, different_randmom_factor_the_second_day)
 {
     LightScheduler_ScheduleTurnOn(kLightNumber_, EVERYDAY, kScheduledMinute_);
 
@@ -128,7 +128,7 @@ TEST_F(LightSchedulerRandomize, different_randmom_factor_the_second_day)
     LightScheduler_WakeUp();
 }
 
-TEST_F(LightSchedulerRandomize, multiple_random_controls)
+TEST_F(LightSchedulerRandomizeTest, multiple_random_controls)
 {
     EXPECT_CALL(mockRandomMinute_, Get())
             .Times(4)
@@ -181,7 +181,7 @@ TEST_F(LightSchedulerRandomize, multiple_random_controls)
 
 
 #if 0 //To be implemented
-TEST_F(LightSchedulerRandomize, EnableRandomizeEarlyOnlyOneEventFires)
+TEST_F(LightSchedulerRandomizeTest, EnableRandomizeEarlyOnlyOneEventFires)
 {
     UT_PTR_SET(RandomMinute_Get, FakeRandomMinute_Get);
     FakeRandomMinute_SetFirstAndIncrement(-10, 1);
@@ -200,5 +200,4 @@ TEST_F(LightSchedulerRandomize, EnableRandomizeEarlyOnlyOneEventFires)
 #endif
 
 
-} // namespace LightSchedulerTest
 } // namespace HomeAutomation

@@ -27,10 +27,9 @@
 
 
 namespace HomeAutomation {
-namespace RumdomMinuteTest {
 
 
-class RandomMinute : public ::testing::Test {
+class RandomMinuteTest : public ::testing::Test {
 protected:
     virtual void SetUp()
     {
@@ -44,7 +43,7 @@ protected:
 };
 
 
-TEST_F(RandomMinute, get_is_in_range)
+TEST_F(RandomMinuteTest, get_is_in_range)
 {
     int minute;
 
@@ -59,7 +58,7 @@ TEST_F(RandomMinute, get_is_in_range)
     }
 }
 
-TEST_F(RandomMinute, all_values_possible)
+TEST_F(RandomMinuteTest, all_values_possible)
 {
     int minute;
     int hit[2 * kBound + 1];
@@ -83,5 +82,4 @@ TEST_F(RandomMinute, all_values_possible)
 }
 
 
-} // namespace RumdomMinuteTest
 } // namespace HomeAutomation

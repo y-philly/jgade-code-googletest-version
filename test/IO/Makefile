@@ -1,4 +1,4 @@
-UT_LIST := FlashTest
+UT_LIST := Flash
 
 # $(call do-ut-list,list,target)
 define do-ut-list

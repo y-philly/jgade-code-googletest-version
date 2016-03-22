@@ -20,8 +20,10 @@
 //- ------------------------------------------------------------------
 
 #include "util/MockRuntimeError.h"
-
 #include "LedDriver/LedDriver.h"
+
+
+namespace Driver {
 
 
 using ::testing::_;
@@ -31,9 +33,21 @@ using ::testing::ByRef;
 using ::testing::Sequence;
 
 
-namespace LedDriverTest {
+//
+// Creation test.
+//
+TEST(create, leds_are_off)
+{
+    uint16_t virtualLeds;
+    LedDriver_Create(&virtualLeds);
+    ASSERT_THAT(virtualLeds, Eq(0u));
+}
 
-class LedDriver : public ::testing::TestWithParam<int> {
+
+//
+// Base test class.
+//
+class LedDriverTest : public ::testing::Test {
 protected:
     virtual void SetUp()
     {
@@ -55,55 +69,104 @@ protected:
 };
 
 
-TEST_F(LedDriver, leds_are_off_after_create)
-{
-    LedDriver_Destroy();
-    LedDriver_Create(&virtualLeds_);
-    ASSERT_THAT(virtualLeds_, Eq(0u));
-}
+class all_leds_turn_off : public LedDriverTest {};
 
-TEST_F(LedDriver, turn_on_led_one)
+TEST_F(all_leds_turn_off, TurnOn_turns_on_one_led)
 {
     LedDriver_TurnOn(1);
     ASSERT_THAT(virtualLeds_, Eq(1u));
 }
 
-TEST_F(LedDriver, turn_off_led_one)
+TEST_F(all_leds_turn_off, turn_off_led_one)
 {
     LedDriver_TurnOn(1);
     LedDriver_TurnOff(1);
     ASSERT_THAT(virtualLeds_, Eq(0u));
 }
 
-TEST_F(LedDriver, turn_on_multiple_leds)
+TEST_F(all_leds_turn_off, TurnOn_turns_on_multiple_leds)
 {
     LedDriver_TurnOn(9);
     LedDriver_TurnOn(8);
     ASSERT_THAT(virtualLeds_, Eq(0x180u));
 }
 
-TEST_F(LedDriver, turn_off_any_led)
+TEST_F(all_leds_turn_off, TurnOff_turns_off_any_led)
 {
     LedDriver_TurnAllOn();
     LedDriver_TurnOff(8);
     ASSERT_THAT(virtualLeds_, Eq(0xff7fu));
 }
 
-TEST_F(LedDriver, led_memory_is_not_readable)
+TEST_F(all_leds_turn_off, led_memory_is_not_readable)
 {
     virtualLeds_ = 0xffffu;
     LedDriver_TurnOn(8);
     ASSERT_THAT(virtualLeds_, Eq(0x80u));
 }
 
-TEST_F(LedDriver, UpperAndLowerBounds)
+TEST_F(all_leds_turn_off, TurnOn_turns_on_upper_and_lower_bounds_leds)
 {
     LedDriver_TurnOn(1);
     LedDriver_TurnOn(16);
     ASSERT_THAT(virtualLeds_, Eq(0x8001u));
 }
 
-TEST_P(LedDriver, out_of_bounds_turn_on_does_no_harm)
+TEST_F(all_leds_turn_off, IsOn_returns_current_on_state)
+{
+    ASSERT_THAT(LedDriver_IsOn(1), Eq(false));
+    LedDriver_TurnOn(1);
+    ASSERT_THAT(LedDriver_IsOn(1), Eq(true));
+}
+
+TEST_F(all_leds_turn_off, IsOff_returns_current_off_state)
+{
+    ASSERT_THAT(LedDriver_IsOff(12), Eq(true));
+    LedDriver_TurnOn(12);
+    ASSERT_THAT(LedDriver_IsOff(12), Eq(false));
+}
+
+TEST_F(all_leds_turn_off, TurnAllOn_turns_on_all_leds)
+{
+    LedDriver_TurnAllOn();
+    ASSERT_THAT(virtualLeds_, Eq(0xffffu));
+}
+
+TEST_F(all_leds_turn_off, TurnAllOff_turns_off_all_leds)
+{
+    LedDriver_TurnAllOn();
+    LedDriver_TurnAllOff();
+    ASSERT_THAT(virtualLeds_, Eq(0u));
+}
+
+TEST_F(all_leds_turn_off, TurnOn_produces_runtime_error_when_ledNumber_out_of_bounds)
+{
+    const std::string kExpectLog{ "LED Driver: out-of-bounds LED" };
+
+    EXPECT_CALL(mockRuntimeError_, AddLog(kExpectLog, _, _, _))
+        .Times(1)
+        .InSequence(sequence_);
+
+    LedDriver_TurnOn(-1);
+}
+
+TEST_F(all_leds_turn_off, leds_are_always_off_when_ledNumber_out_of_bounds)
+{
+    EXPECT_CALL(mockRuntimeError_, AddLog(_, _, _, _))
+        .Times(4);
+
+    ASSERT_THAT(LedDriver_IsOff(0),  Eq(true));
+    ASSERT_THAT(LedDriver_IsOff(17), Eq(true));
+    ASSERT_THAT(LedDriver_IsOn(0),   Eq(false));
+    ASSERT_THAT(LedDriver_IsOn(17),  Eq(false));
+}
+
+
+class arg_pattern_test_when_all_leds_turn_off :
+    public all_leds_turn_off,
+    public ::testing::WithParamInterface<int> {};
+
+TEST_P(arg_pattern_test_when_all_leds_turn_off, TurnOn_does_no_harm)
 {
     const int n = GetParam();
 
@@ -116,7 +179,7 @@ TEST_P(LedDriver, out_of_bounds_turn_on_does_no_harm)
     ASSERT_THAT(virtualLeds_, Eq(0u));
 }
 
-TEST_P(LedDriver, out_of_bounds_turn_off_does_no_harm)
+TEST_P(arg_pattern_test_when_all_leds_turn_off, TurnOff_does_no_harm)
 {
     LedDriver_TurnAllOn();
 
@@ -132,8 +195,8 @@ TEST_P(LedDriver, out_of_bounds_turn_off_does_no_harm)
 }
 
 INSTANTIATE_TEST_CASE_P(
-    OutOfBoundaries,
-    LedDriver,
+    aPatternInstance,
+    arg_pattern_test_when_all_leds_turn_off,
     ::testing::Values(-1, 0u, 17u, 3141u));
 
 #if 0
@@ -143,54 +206,6 @@ TEST_F(LedDriver, out_of_bounds_to_do)
 }
 #endif
 
-TEST_F(LedDriver, out_of_bounds_produces_runtime_error)
-{
-    const std::string kExpectLog{ "LED Driver: out-of-bounds LED" };
 
-    EXPECT_CALL(mockRuntimeError_, AddLog(kExpectLog, _, _, _))
-        .Times(1)
-        .InSequence(sequence_);
-
-    LedDriver_TurnOn(-1);
-}
-
-TEST_F(LedDriver, IsOn)
-{
-    ASSERT_THAT(LedDriver_IsOn(1), Eq(false));
-    LedDriver_TurnOn(1);
-    ASSERT_THAT(LedDriver_IsOn(1), Eq(true));
-}
-
-TEST_F(LedDriver, IsOff)
-{
-    ASSERT_THAT(LedDriver_IsOff(12), Eq(true));
-    LedDriver_TurnOn(12);
-    ASSERT_THAT(LedDriver_IsOff(12), Eq(false));
-}
-
-TEST_F(LedDriver, out_of_bounds_leds_are_always_off)
-{
-    EXPECT_CALL(mockRuntimeError_, AddLog(_, _, _, _))
-        .Times(4);
-
-    ASSERT_THAT(LedDriver_IsOff(0),  Eq(true));
-    ASSERT_THAT(LedDriver_IsOff(17), Eq(true));
-    ASSERT_THAT(LedDriver_IsOn(0),   Eq(false));
-    ASSERT_THAT(LedDriver_IsOn(17),  Eq(false));
-}
-
-TEST_F(LedDriver, all_on)
-{
-    LedDriver_TurnAllOn();
-    ASSERT_THAT(virtualLeds_, Eq(0xffffu));
-}
-
-TEST_F(LedDriver, all_off)
-{
-    LedDriver_TurnAllOn();
-    LedDriver_TurnAllOff();
-    ASSERT_THAT(virtualLeds_, Eq(0u));
-}
-
-} // namespace LedDriver
+} // namespace Driver
 

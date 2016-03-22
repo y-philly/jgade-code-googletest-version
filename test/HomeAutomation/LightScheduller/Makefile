@@ -1,4 +1,4 @@
-UT_LIST := RandomMinuteTest LightSchedulerTest
+UT_LIST := RandomMinute LightScheduler
 
 # $(call do-ut-list,list,target)
 define do-ut-list
