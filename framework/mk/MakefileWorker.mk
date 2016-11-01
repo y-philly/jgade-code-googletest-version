@@ -152,10 +152,6 @@ obj/%.o: %.c
 	mkdir -p $(dir $@)
 	$(COMPILE.c) -MMD -MP  $(OUTPUT_OPTION) $<
 
-ifneq "$(MAKECMDGOALS)" "clean"
-  -include $(dep)
-endif
-
 .PHONY: clean
 clean:
 	echo Making clean
@@ -201,3 +197,7 @@ debug:
 	@$(call debug-print-list,$(stuff_to_clean))
 	@echo Includes:
 	@$(call debug-print-list,$(include))
+
+ifneq "$(MAKECMDGOALS)" "clean"
+  -include $(dep)
+endif
