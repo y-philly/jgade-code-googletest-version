@@ -123,6 +123,12 @@ vpath %.c $(src_dir)
 vpath %.cpp $(mock_dir)
 vpath %.cc $(PRJ_ROOT)/framework/googletest
 
+all:
+
+ifneq "$(MAKECMDGOALS)" "clean"
+  -include $(dep)
+endif
+
 .PHONY: all
 all: $(test_target)
 	./$(test_target)
@@ -197,7 +203,3 @@ debug:
 	@$(call debug-print-list,$(stuff_to_clean))
 	@echo Includes:
 	@$(call debug-print-list,$(include))
-
-ifneq "$(MAKECMDGOALS)" "clean"
-  -include $(dep)
-endif
