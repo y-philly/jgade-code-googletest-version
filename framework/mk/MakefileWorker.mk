@@ -1,17 +1,16 @@
-#------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
 # MakefileWorker.mk
 #
-# ユニットテストプロジェクト用Makefileの支援ファイルです.
-# プロジェクトのMakefileからインクルードして下さい.
+# Support Makefile for some unit test projects.
+# Please include from your project Makefile.
 #
-# プロジェクトのMakefileでは以下の変数を設定してください.
+#  Please set below variables in your project's Makefile.
 #
-# UNIT_NAME            : テスト実行ファイルの名前
-# PRJ_ROOT             : ユニットテストフレームワークのルートディレクトリ
-# TEST_CODE_DIR        : ユニットテストコードが格納されたディレクトリ
-# MOCK_CODE_DIR        : モックコードが格納されたディレクトリ
-# OVERRIDE_INCLUDE_DIR : 優先させたいインクルードファイルが格納されたディレクトリ
-#------------------------------------------------------------------------------------
+# UNIT_NAME  : The name of a unit which you test.
+# PRJ_ROOT   : Root directory of your project.
+# SRC        : List of product codes.
+# MOCK_CODE  : List of mock codes you use.
+#-------------------------------------------------------------------------------
 
 ifndef UNIT_NAME
   $(error Please set UNIT_NAME)
@@ -81,9 +80,8 @@ CFLAGS   := $(compile_flags) -std=c99
 CXXFLAGS := $(compile_flags) -std=gnu++14
 CPPFLAGS += -DPATH_MAX=256
 
-# Cygwin環境ではGTEST_HAS_PTHREADが自動で1にならないので、明示的に指定する.
-CPPFLAGS += $(include) \
-            -DGTEST_HAS_PTHREAD=1
+# Define GTEST_HAS_PTHREAD, Because default value of this variable is 0 in Cygwin environment.
+CPPFLAGS += $(include) -DGTEST_HAS_PTHREAD=1
 ifeq ($(UT_ENABLE_DEBUG), y)
   CPPFLAGS += -D_DEBUG_
 endif
