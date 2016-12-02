@@ -28,23 +28,23 @@ endif
 include $(PRJ_ROOT)/framework/mk/Helper.mk
 
 # Debug off by default
-ifndef UT_ENABLE_DEBUG
-  UT_ENABLE_DEBUG := n
+ifndef ENABLE_DEBUG
+  ENABLE_DEBUG := n
 endif
 
 # Default compiler warnings
-ifndef UT_WARNINGFLAGS
-  UT_WARNINGFLAGS := -Wall \
-                     -Wextra \
-                     -Wshadow \
-                     -Wswitch-default \
-                     -Wconversion \
-                     -Wno-missing-field-initializers \
+ifndef WARNINGFLAGS
+  WARNINGFLAGS := -Wall \
+                  -Wextra \
+                  -Wshadow \
+                  -Wswitch-default \
+                  -Wconversion \
+                  -Wno-missing-field-initializers \
 
-# UT_WARNINGFLAGS += -pedantic-errors \
-#                    -Wpedantic \
-#                    -Wswitch-enum \
-#                    -Werror
+# WARNINGFLAGS += -pedantic-errors \
+#                 -Wpedantic \
+#                 -Wswitch-enum \
+#                 -Werror
 endif
 compile_flags += $(UT_WARNINGFLAGS)
 
@@ -62,7 +62,7 @@ ifeq ($(CC), clang)
   compile_flags += -fno-exceptions
 endif
 
-ifeq ($(UT_USE_CCACHE), y)
+ifeq ($(USE_CCACHE), y)
   CC := ccache $(CC)
   CXX := ccache $(CXX)
 endif
